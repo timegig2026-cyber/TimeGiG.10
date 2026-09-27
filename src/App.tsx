@@ -81,15 +81,21 @@ import {
   MessageSquare
 } from 'lucide-react';
 
+import realisticSeekersIcon from './assets/images/realistic_seekers_icon_1790451981519.jpg';
+import realisticGigsIcon from './assets/images/realistic_gigs_icon_1790451994853.jpg';
+import realisticTenantIcon from './assets/images/realistic_tenant_icon_1790452006562.jpg';
+import realisticBusinessesIcon from './assets/images/realistic_businesses_icon_1790452020133.jpg';
+import realisticAdminIcon from './assets/images/realistic_admin_icon_1790452032105.jpg';
+import realisticProfileIcon from './assets/images/realistic_profile_icon_1790452063905.jpg';
+import realisticSettingsIcon from './assets/images/realistic_settings_icon_1790452074282.jpg';
+
 // Fix for default marker icon not showing
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 // Reusable Flat Icon component
 const FlatIcon = ({ icon: Icon, className = "" }: { icon: any; className?: string }) => (
-  <div className={`flat-icon ${className}`}>
-    <Icon className="w-5 h-5 text-gray-700" />
-  </div>
+  <Icon className={className} />
 );
 
 let DefaultIcon = L.icon({
@@ -102,15 +108,17 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 // Helper to create dynamic user profile picture map marker
-const createUserProfileMarkerIcon = (avatarUrl: string, name: string, isVerified?: boolean) => {
+const createUserProfileMarkerIcon = (avatarUrl: string, name: string, isVerified?: boolean, zoom: number = 13) => {
   const initial = (name || 'User').charAt(0).toUpperCase();
   const safeAvatar = avatarUrl ? avatarUrl.replace(/"/g, '&quot;') : '';
   const safeName = (name || 'User').replace(/"/g, '&quot;');
+  
+  const scale = Math.max(0.4, Math.min(1.2, zoom / 15));
 
   return L.divIcon({
     className: 'custom-user-profile-marker',
     html: `
-      <div class="relative flex flex-col items-center group cursor-pointer transition-transform duration-200 hover:scale-110">
+      <div class="relative flex flex-col items-center group cursor-pointer transition-all duration-300" style="transform: scale(${scale});">
         <!-- Pulsing Ring Background -->
         <div class="absolute -top-1 w-12 h-12 bg-blue-500 rounded-full opacity-45 animate-ping"></div>
         
@@ -138,15 +146,17 @@ const createUserProfileMarkerIcon = (avatarUrl: string, name: string, isVerified
 };
 
 // Helper to create Live Seeker For Hire map marker with profile picture and radar
-const createLiveSeekerMarkerIcon = (avatarUrl: string, name: string, isVerified?: boolean) => {
+const createLiveSeekerMarkerIcon = (avatarUrl: string, name: string, isVerified?: boolean, zoom: number = 13) => {
   const initial = (name || 'Seeker').charAt(0).toUpperCase();
   const safeAvatar = avatarUrl ? avatarUrl.replace(/"/g, '&quot;') : '';
   const safeName = (name || 'Seeker').replace(/"/g, '&quot;');
+  
+  const scale = Math.max(0.4, Math.min(1.2, zoom / 15));
 
   return L.divIcon({
     className: 'custom-live-seeker-marker',
     html: `
-      <div class="relative flex flex-col items-center group cursor-pointer transition-transform duration-200 hover:scale-110">
+      <div class="relative flex flex-col items-center group cursor-pointer transition-all duration-300" style="transform: scale(${scale});">
         <!-- Radar Pulse -->
         <div class="absolute -top-1 w-14 h-14 bg-purple-500 rounded-full opacity-50 animate-ping"></div>
         
@@ -179,12 +189,13 @@ const createLiveSeekerMarkerIcon = (avatarUrl: string, name: string, isVerified?
 };
 
 // Helper to create Seeker map marker
-const createSeekerMarkerIcon = (title: string, role: string) => {
+const createSeekerMarkerIcon = (title: string, role: string, zoom: number = 13) => {
+  const scale = Math.max(0.4, Math.min(1.2, zoom / 15));
   return L.divIcon({
     className: 'custom-seeker-marker',
     html: `
-      <div class="relative flex flex-col items-center group cursor-pointer transition-transform duration-200 hover:scale-110">
-        <div class="px-2.5 py-1 rounded-full bg-purple-600 text-white font-bold text-[10px] shadow-lg border-2 border-white flex items-center gap-1">
+      <div class="relative flex flex-col items-center group cursor-pointer transition-all duration-300" style="transform: scale(${scale});">
+        <div class="px-2.5 py-1 rounded-full bg-purple-600 text-white font-bold text-[10px] shadow-lg border-2 border-white flex items-center gap-1 transition-all duration-300 group-hover:scale-105">
           <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
           <span class="truncate max-w-[80px]">${title}</span>
         </div>
@@ -198,16 +209,17 @@ const createSeekerMarkerIcon = (title: string, role: string) => {
 };
 
 // Helper to create Moving Seeker Active Navigation Marker
-const createMovingSeekerMarkerIcon = (avatarUrl: string, name: string, trade: string) => {
+const createMovingSeekerMarkerIcon = (avatarUrl: string, name: string, trade: string, zoom: number = 13) => {
   const initial = (name || 'S').charAt(0).toUpperCase();
   const safeAvatar = avatarUrl ? avatarUrl.replace(/"/g, '&quot;') : '';
+  const scale = Math.max(0.4, Math.min(1.2, zoom / 15));
   return L.divIcon({
     className: 'custom-moving-seeker-marker',
     html: `
-      <div class="relative flex flex-col items-center group cursor-pointer animate-in zoom-in-50 duration-200">
+      <div class="relative flex flex-col items-center group cursor-pointer transition-all duration-300" style="transform: scale(${scale});">
         <div class="absolute -inset-3 bg-purple-500/30 rounded-full animate-ping pointer-events-none"></div>
         <div class="absolute -inset-1.5 bg-purple-500/40 rounded-full animate-pulse pointer-events-none"></div>
-        <div class="relative bg-gradient-to-tr from-purple-700 via-indigo-700 to-purple-900 border-2 border-white rounded-2xl px-2 py-1 shadow-2xl flex items-center gap-1.5 text-white">
+        <div class="relative bg-gradient-to-tr from-purple-700 via-indigo-700 to-purple-900 border-2 border-white rounded-2xl px-2 py-1 shadow-2xl flex items-center gap-1.5 text-white transition-all duration-300 group-hover:scale-105">
           <div class="w-6 h-6 rounded-full overflow-hidden border border-white/80 bg-purple-900 shrink-0 flex items-center justify-center font-black text-[9px]">
             ${safeAvatar ? `<img src="${safeAvatar}" class="w-full h-full object-cover" />` : initial}
           </div>
@@ -226,12 +238,13 @@ const createMovingSeekerMarkerIcon = (avatarUrl: string, name: string, trade: st
 };
 
 // Helper to create GiG map marker
-const createGigMarkerIcon = (pay: string, title: string) => {
+const createGigMarkerIcon = (pay: string, title: string, zoom: number = 13) => {
+  const scale = Math.max(0.4, Math.min(1.2, zoom / 15));
   return L.divIcon({
     className: 'custom-gig-marker',
     html: `
-      <div class="relative flex flex-col items-center group cursor-pointer transition-transform duration-200 hover:scale-110">
-        <div class="px-2.5 py-1 rounded-full bg-amber-500 text-slate-950 font-black text-[11px] shadow-lg border-2 border-white flex items-center gap-1">
+      <div class="relative flex flex-col items-center group cursor-pointer transition-all duration-300" style="transform: scale(${scale});">
+        <div class="px-2.5 py-1 rounded-full bg-amber-500 text-slate-950 font-black text-[11px] shadow-lg border-2 border-white flex items-center gap-1 transition-all duration-300 group-hover:scale-105">
           <span>⚡ ${pay}</span>
         </div>
         <div class="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[6px] border-t-amber-500"></div>
@@ -244,12 +257,13 @@ const createGigMarkerIcon = (pay: string, title: string) => {
 };
 
 // Helper to create Tenant map marker
-const createTenantMarkerIcon = (price: string) => {
+const createTenantMarkerIcon = (price: string, zoom: number = 13) => {
+  const scale = Math.max(0.4, Math.min(1.2, zoom / 15));
   return L.divIcon({
     className: 'custom-tenant-marker',
     html: `
-      <div class="relative flex flex-col items-center group cursor-pointer transition-transform duration-200 hover:scale-110">
-        <div class="px-2.5 py-1 rounded-full bg-emerald-600 text-white font-bold text-[10px] shadow-lg border-2 border-white flex items-center gap-1">
+      <div class="relative flex flex-col items-center group cursor-pointer transition-all duration-300" style="transform: scale(${scale});">
+        <div class="px-2.5 py-1 rounded-full bg-emerald-600 text-white font-bold text-[10px] shadow-lg border-2 border-white flex items-center gap-1 transition-all duration-300 group-hover:scale-105">
           <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
           <span>${price}</span>
         </div>
@@ -261,20 +275,221 @@ const createTenantMarkerIcon = (price: string) => {
     popupAnchor: [0, -32]
   });
 };
-const customPinIcon = L.divIcon({
-  className: 'custom-pin-marker',
-  html: `
-    <div class="relative flex items-end justify-center w-8 h-10">
-      <div class="absolute w-3 h-3 bg-red-600 rounded-full opacity-20 blur-[1px] bottom-0 translate-y-1 scale-x-150"></div>
-      <svg class="w-8 h-10 text-red-500 filter drop-shadow-md transition-transform duration-200 hover:scale-105" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="currentColor" fill-opacity="0.25"></path>
-        <circle cx="12" cy="10" r="3" fill="white"></circle>
-      </svg>
-    </div>
-  `,
-  iconSize: [32, 40],
-  iconAnchor: [16, 40],
-});
+
+// Helper to get tailored business symbol, colors, and badge configuration
+interface BusinessSymbolConfig {
+  svg: string;
+  bgColor: string;
+  arrowColor: string;
+  iconBg: string;
+  label: string;
+}
+
+const getBusinessSymbolConfig = (name: string, category: string = '', service: string = ''): BusinessSymbolConfig => {
+  const text = `${name} ${category} ${service}`.toLowerCase();
+
+  // 1. Electrical, Solar, Energy
+  if (/electr|solar|power|battery|voltage|generator|energy/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-amber-200" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`,
+      bgColor: 'bg-amber-600',
+      arrowColor: 'border-t-amber-600',
+      iconBg: 'bg-amber-900/50',
+      label: 'Electrical'
+    };
+  }
+
+  // 2. Plumbing, Water, Pipes, Sanitation
+  if (/plumb|water|pipe|drain|leak|sanitat|tap/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-cyan-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`,
+      bgColor: 'bg-cyan-600',
+      arrowColor: 'border-t-cyan-600',
+      iconBg: 'bg-cyan-900/50',
+      label: 'Plumbing'
+    };
+  }
+
+  // 3. Cleaning, Sweep, Hygiene, Laundry, Sanitation
+  if (/clean|sweep|hygiene|wash|laundr|maid|janitor/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-emerald-200" viewBox="0 0 24 24" fill="currentColor"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>`,
+      bgColor: 'bg-emerald-600',
+      arrowColor: 'border-t-emerald-600',
+      iconBg: 'bg-emerald-900/50',
+      label: 'Cleaning'
+    };
+  }
+
+  // 4. Fashion, Clothing, Apparel, Boutique, Tailor, Shoes
+  if (/fashion|cloth|apparel|wear|boutique|shirt|shoe|dress|tailor|suit/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-pink-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>`,
+      bgColor: 'bg-pink-600',
+      arrowColor: 'border-t-pink-600',
+      iconBg: 'bg-pink-900/50',
+      label: 'Clothing'
+    };
+  }
+
+  // 5. Electronics, Computers, Tech, IT, Gadgets
+  if (/tech|electron|comput|phone|gadget|software|cyber|network|digital/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-indigo-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="4" rx="2"></rect><line x1="2" x2="22" y1="20" y2="20"></line></svg>`,
+      bgColor: 'bg-indigo-600',
+      arrowColor: 'border-t-indigo-600',
+      iconBg: 'bg-indigo-900/50',
+      label: 'Electronics'
+    };
+  }
+
+  // 6. Hospitality, Hotel, Resort, Accommodation, Lodge
+  if (/hotel|resort|lodge|motel|stay|hospitality|inn|guest|suite/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-purple-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"></path><path d="M2 8h18a2 2 0 0 1 2 2v10"></path><path d="M2 17h20"></path><path d="M6 8v9"></path></svg>`,
+      bgColor: 'bg-purple-700',
+      arrowColor: 'border-t-purple-700',
+      iconBg: 'bg-purple-950/50',
+      label: 'Hotel'
+    };
+  }
+
+  // 7. Restaurant, Food, Dining, Bakery, Cafe, Coffee, Bar, Bistro, Grill
+  if (/restaur|cafe|coffee|food|bakery|diner|grill|pizza|burger|bar|bistro|kitchen|dining|pasta|culinary/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-orange-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"></path><path d="M15 11v11"></path><path d="M5 2v20"></path><path d="M2 2h6v5a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2Z"></path></svg>`,
+      bgColor: 'bg-orange-600',
+      arrowColor: 'border-t-orange-600',
+      iconBg: 'bg-orange-950/50',
+      label: 'Dining'
+    };
+  }
+
+  // 8. Automotive, Mechanics, Auto Repair, Car, Motor, Tyre
+  if (/auto|car|mechanic|motor|tire|tyre|garage|vehicle|transport/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-red-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>`,
+      bgColor: 'bg-red-600',
+      arrowColor: 'border-t-red-600',
+      iconBg: 'bg-red-950/50',
+      label: 'Automotive'
+    };
+  }
+
+  // 9. Medical, Healthcare, Pharmacy, Dental, Clinic, Doctor
+  if (/health|clinic|pharmacy|medic|doctor|dent|care|hospital|pharma/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-rose-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v12"></path><path d="M6 12h12"></path></svg>`,
+      bgColor: 'bg-rose-600',
+      arrowColor: 'border-t-rose-600',
+      iconBg: 'bg-rose-950/50',
+      label: 'Healthcare'
+    };
+  }
+
+  // 10. Construction, Hardware, Carpentry, Handyman, Tools
+  if (/construct|hardware|timber|paint|build|carpent|handyman|mason|tool/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-amber-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 12-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"></path><path d="M17.64 15 22 10.64"></path><path d="m20.91 3.26-6.36 6.36"></path></svg>`,
+      bgColor: 'bg-amber-700',
+      arrowColor: 'border-t-amber-700',
+      iconBg: 'bg-amber-950/50',
+      label: 'Hardware'
+    };
+  }
+
+  // 11. Grocery, Supermarket, Market, Mart
+  if (/grocer|supermarket|market|mart|fruit|fresh|produce/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-emerald-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>`,
+      bgColor: 'bg-emerald-700',
+      arrowColor: 'border-t-emerald-700',
+      iconBg: 'bg-emerald-950/50',
+      label: 'Market'
+    };
+  }
+
+  // 12. Salon, Barber, Beauty, Spa, Hair, Cosmetics
+  if (/salon|barber|beauty|spa|hair|nails|cosmetic/.test(text)) {
+    return {
+      svg: `<svg class="w-3.5 h-3.5 text-fuchsia-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" x2="8.12" y1="4" y2="15.88"></line><line x1="14.47" x2="20" y1="14.48" y2="20"></line><line x1="8.12" x2="12" y1="8.12" y2="12"></line></svg>`,
+      bgColor: 'bg-fuchsia-600',
+      arrowColor: 'border-t-fuchsia-600',
+      iconBg: 'bg-fuchsia-950/50',
+      label: 'Beauty'
+    };
+  }
+
+  // 13. Default / General Business
+  return {
+    svg: `<svg class="w-3.5 h-3.5 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path></svg>`,
+    bgColor: 'bg-slate-900',
+    arrowColor: 'border-t-slate-900',
+    iconBg: 'bg-slate-800',
+    label: 'Business'
+  };
+};
+
+// Helper to create Business map marker with custom symbols suited to each business
+const createBusinessMarkerIcon = (name: string, avatar: string = '', category: string = '', service: string = '', zoom: number = 13) => {
+  const config = getBusinessSymbolConfig(name, category, service);
+  const safeAvatar = avatar ? avatar.replace(/"/g, '&quot;') : '';
+  
+  // Calculate dynamic scale based on zoom level
+  // Standard zoom is 13-15. We scale down significantly as we zoom out.
+  const scale = Math.max(0.4, Math.min(1, zoom / 15));
+  const showLabel = zoom >= 13;
+
+  return L.divIcon({
+    className: 'custom-business-marker',
+    html: `
+      <div class="relative flex flex-col items-center group cursor-pointer transition-all duration-300" style="transform: scale(${scale});">
+        <!-- Logo/Symbol Circle -->
+        <div class="relative w-11 h-11 rounded-full ring-4 ring-white shadow-2xl bg-white flex items-center justify-center overflow-hidden border-2 border-slate-900/10 transition-all duration-300 group-hover:scale-110">
+          ${
+            safeAvatar 
+              ? `<img src="${safeAvatar}" alt="${name}" class="w-full h-full object-cover" />`
+              : `<div class="w-full h-full ${config.bgColor} flex items-center justify-center text-white font-black text-base uppercase">${name.charAt(0)}</div>`
+          }
+          <!-- Category Symbol Badge -->
+          <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full ${config.bgColor} border-2 border-white flex items-center justify-center shadow-lg z-20">
+            ${config.svg.replace('w-3.5 h-3.5', 'w-2.5 h-2.5').replace(/text-\w+-\d+/g, 'text-white')}
+          </div>
+        </div>
+        
+        <!-- Pointer Tip Triangle -->
+        <div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-slate-800 -mt-0.5 filter drop-shadow-md relative z-10"></div>
+        
+        <!-- Name Label Underneath - Hidden when zoomed out too far -->
+        ${showLabel ? `
+        <div class="mt-1 px-2.5 py-0.5 rounded-lg bg-slate-900/90 backdrop-blur-md text-white text-[9px] font-black shadow-xl border border-white/20 whitespace-nowrap max-w-[110px] truncate ring-2 ring-slate-900/5">
+          ${name}
+        </div>
+        ` : ''}
+      </div>
+    `,
+    iconSize: [110, 80],
+    iconAnchor: [55, 48],
+    popupAnchor: [0, -48]
+  });
+};
+const createCustomPinIcon = (zoom: number = 13) => {
+  const scale = Math.max(0.6, Math.min(1.2, zoom / 15));
+  return L.divIcon({
+    className: 'custom-pin-marker',
+    html: `
+      <div class="relative flex items-end justify-center w-8 h-10 transition-all duration-300" style="transform: scale(${scale});">
+        <div class="absolute w-3 h-3 bg-red-600 rounded-full opacity-20 blur-[1px] bottom-0 translate-y-1 scale-x-150"></div>
+        <svg class="w-8 h-10 text-red-500 filter drop-shadow-md transition-transform duration-200 hover:scale-105" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="currentColor" fill-opacity="0.25"></path>
+          <circle cx="12" cy="10" r="3" fill="white"></circle>
+        </svg>
+      </div>
+    `,
+    iconSize: [32, 40],
+    iconAnchor: [16, 40],
+  });
+};
 
 // Map styles configs
 const MAP_THEMES = [
@@ -333,6 +548,9 @@ interface MapControllerProps {
   setAutoCenter: (val: boolean) => void;
   zoomTrigger: number;
   setZoomTrigger: (val: number) => void;
+  onZoomChange?: (zoom: number) => void;
+  fitBoundsPoints?: [number, number][] | null;
+  setFitBoundsPoints?: (val: null) => void;
 }
 
 function MapController({ 
@@ -343,7 +561,10 @@ function MapController({
   autoCenter,
   setAutoCenter,
   zoomTrigger,
-  setZoomTrigger 
+  setZoomTrigger,
+  onZoomChange,
+  fitBoundsPoints,
+  setFitBoundsPoints
 }: MapControllerProps) {
   const map = useMap();
 
@@ -356,8 +577,20 @@ function MapController({
     },
     dragstart() {
       setAutoCenter(false);
+    },
+    zoomend() {
+      if (onZoomChange) {
+        onZoomChange(map.getZoom());
+      }
     }
   });
+
+  // Initialize zoom level on mount
+  useEffect(() => {
+    if (onZoomChange) {
+      onZoomChange(map.getZoom());
+    }
+  }, [map, onZoomChange]);
 
   // Handle programmatically triggered zoom in/out actions
   useEffect(() => {
@@ -387,6 +620,28 @@ function MapController({
       setFlyToLocation(null);
     }
   }, [flyToLocation, map, setFlyToLocation]);
+
+  // Handle programmatically triggered fitBounds to show entire route from user to destination
+  useEffect(() => {
+    if (fitBoundsPoints && fitBoundsPoints.length >= 2) {
+      try {
+        const valid = fitBoundsPoints.filter(p => isValidCoordinate(p[0], p[1]));
+        if (valid.length >= 2) {
+          const bounds = L.latLngBounds(valid.map(p => L.latLng(p[0], p[1])));
+          map.fitBounds(bounds, {
+            padding: [70, 70],
+            maxZoom: 17,
+            animate: true
+          });
+        }
+      } catch (err) {
+        console.warn("Map fitBounds guarded:", err);
+      }
+      if (setFitBoundsPoints) {
+        setFitBoundsPoints(null);
+      }
+    }
+  }, [fitBoundsPoints, map, setFitBoundsPoints]);
 
   // Keep centered on user location if autoCenter mode is enabled safely
   useEffect(() => {
@@ -656,6 +911,11 @@ export default function App() {
   // Seekers Board Filter & Search States
   const [selectedTradeFilter, setSelectedTradeFilter] = useState<string>('All Trades');
   const [seekerSearchQuery, setSeekerSearchQuery] = useState<string>('');
+  
+  // Business Filtering
+  const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [showBusinessFilter, setShowBusinessFilter] = useState<boolean>(false);
 
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   const [showReviewPopup, setShowReviewPopup] = useState<boolean>(false);
@@ -1114,53 +1374,97 @@ export default function App() {
   const [showThemePanel, setShowThemePanel] = useState<boolean>(false);
   const [flyToTrigger, setFlyToTrigger] = useState<{ lat: number; lng: number; zoom?: number } | null>(null);
   const [zoomTrigger, setZoomTrigger] = useState<number>(0);
+  const [currentZoom, setCurrentZoom] = useState<number>(13);
   const [routePoints, setRoutePoints] = useState<[number, number][]>([]);
   const [routeDetails, setRouteDetails] = useState<{ distance: string; duration: string } | null>(null);
+  const [fitBoundsPoints, setFitBoundsPoints] = useState<[number, number][] | null>(null);
 
-  // Calculate driving navigation route from user position to destination
-  const calculateRouteTo = async (destLat: number, destLng: number) => {
+  // Active Navigation Route details (Directs user from exact location to business)
+  interface ActiveNavRoute {
+    destName: string;
+    destLat: number;
+    destLng: number;
+    destAvatar?: string;
+    destCategory?: string;
+    destService?: string;
+    destAddress?: string;
+    distance: string;
+    duration: string;
+  }
+  const [activeNavRoute, setActiveNavRoute] = useState<ActiveNavRoute | null>(null);
+
+  // Calculate driving navigation route from user exact position to destination
+  const calculateRouteTo = async (
+    destLat: number, 
+    destLng: number,
+    destMeta?: { name?: string; avatar?: string; category?: string; service?: string; address?: string },
+    customOrigin?: [number, number]
+  ) => {
     if (!isValidCoordinate(destLat, destLng)) return;
 
-    if (!userPos || !isValidCoordinate(userPos[0], userPos[1])) {
+    const origin = customOrigin || userPos;
+    if (!origin || !isValidCoordinate(origin[0], origin[1])) {
       setRoutePoints([]);
       setRouteDetails(null);
       return;
     }
 
+    let coords: [number, number][] = [];
+    let distStr = '';
+    let durStr = '';
+
     try {
       const response = await fetch(
-        `https://router.project-osrm.org/route/v1/driving/${userPos[1]},${userPos[0]};${destLng},${destLat}?overview=full&geometries=geojson`
+        `https://router.project-osrm.org/route/v1/driving/${origin[1]},${origin[0]};${destLng},${destLat}?overview=full&geometries=geojson`
       );
       if (response.ok) {
         const data = await response.json();
         if (data.routes && data.routes.length > 0) {
           const route = data.routes[0];
-          const coords: [number, number][] = route.geometry.coordinates.map((pt: [number, number]) => [pt[1], pt[0]]);
-          setRoutePoints(coords);
-          
+          coords = route.geometry.coordinates.map((pt: [number, number]) => [pt[1], pt[0]]);
           const distKm = (route.distance / 1000).toFixed(1);
-          const durMin = Math.round(route.duration / 60);
-          setRouteDetails({
-            distance: `${distKm} km`,
-            duration: `${durMin} min`
-          });
-          return;
+          const durMin = Math.max(1, Math.round(route.duration / 60));
+          distStr = `${distKm} km`;
+          durStr = `${durMin} min`;
         }
       }
     } catch (err) {
       console.warn("OSRM routing failed, drawing direct path...", err);
     }
 
-    // Straight line fallback
-    setRoutePoints([userPos, [destLat, destLng]]);
-    const dx = destLat - userPos[0];
-    const dy = destLng - userPos[1];
-    const estDist = (Math.sqrt(dx * dx + dy * dy) * 111).toFixed(1);
-    setRouteDetails({ distance: `~${estDist} km`, duration: 'Direct Route' });
+    // Straight line fallback if OSRM is blocked or no driving route found
+    if (coords.length === 0) {
+      coords = [origin, [destLat, destLng]];
+      const dx = destLat - origin[0];
+      const dy = destLng - origin[1];
+      const estDist = (Math.sqrt(dx * dx + dy * dy) * 111).toFixed(1);
+      distStr = `~${estDist} km`;
+      durStr = `${Math.max(1, Math.round(Number(estDist) * 1.5))} min`;
+    }
+
+    setRoutePoints(coords);
+    setRouteDetails({ distance: distStr, duration: durStr });
+
+    if (destMeta) {
+      setActiveNavRoute({
+        destName: destMeta.name || 'Destination Business',
+        destLat,
+        destLng,
+        destAvatar: destMeta.avatar,
+        destCategory: destMeta.category,
+        destService: destMeta.service,
+        destAddress: destMeta.address,
+        distance: distStr,
+        duration: durStr
+      });
+    }
+
+    // Smoothly fit map view to enclose both user exact location and business exact location
+    setFitBoundsPoints([origin, [destLat, destLng], ...coords]);
   };
 
   // Bottom Menu Feature State & Scroll Ref
-  type BottomTab = 'seekers' | 'gigs' | 'tenant' | 'admin' | 'profile' | 'settings' | null;
+  type BottomTab = 'seekers' | 'gigs' | 'tenant' | 'businesses' | 'admin' | 'profile' | 'settings' | null;
   const [activeBottomTab, setActiveBottomTab] = useState<BottomTab>(null);
   const [seekerAppearOnMap, setSeekerAppearOnMap] = useState<boolean>(false);
   const [tenantIsActive, setTenantIsActive] = useState<boolean>(() => {
@@ -1179,6 +1483,7 @@ export default function App() {
   }, [tenantIsActive]);
 
   const menuScrollRef = useRef<HTMLDivElement>(null);
+  const tenantMenuScrollRef = useRef<HTMLDivElement>(null);
 
   // Helper to calculate approximate distance from user GPS
   const calculateDistanceText = (lat: number, lng: number) => {
@@ -1201,22 +1506,523 @@ export default function App() {
     {
       id: 'b1',
       name: 'Sandton Electrical Supplies',
-      category: 'Electrician',
+      category: 'Services',
+      service: 'Repair',
       rating: '4.8',
       reviews: 120,
       lat: 20.005,
       lng: 0.015,
-      avatar: 'https://images.unsplash.com/photo-1581092160607-ee2253139366?w=150&auto=format&fit=crop&q=80'
+      avatar: 'https://images.unsplash.com/photo-1581092160607-ee2253139366?w=150&auto=format&fit=crop&q=80',
+      phone: '+27 11 784 9200',
+      email: 'orders@sandtonelectrical.co.za',
+      address: 'Shop 12, Rivonia Road, Sandton, Johannesburg',
+      hours: 'Mon - Sat: 08:00 AM - 05:30 PM',
+      description: 'Certified electrical equipment, solar inverter components, commercial cabling, breakers, and on-site expert consultation.',
+      regNumber: '2023/182904/07'
     },
     {
       id: 'b2',
       name: 'Vance Plumbing Services',
-      category: 'Plumber',
+      category: 'Services',
+      service: 'Plumbing',
       rating: '4.7',
       reviews: 85,
       lat: 20.015,
       lng: 0.025,
-      avatar: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=150&auto=format&fit=crop&q=80'
+      avatar: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=150&auto=format&fit=crop&q=80',
+      phone: '+27 11 883 5140',
+      email: 'dispatch@vanceplumbing.co.za',
+      address: '88 Grayston Drive, Sandton, Johannesburg',
+      hours: '24/7 Emergency & Standard Daily Dispatch',
+      description: 'Licensed master plumbers providing emergency leak repairs, geyser replacements, pipe unblocking, and commercial maintenance.',
+      regNumber: '2022/948271/07'
+    },
+    {
+      id: 'b3',
+      name: 'Clean Sweep Specialists',
+      category: 'Services',
+      service: 'Cleaning',
+      rating: '4.9',
+      reviews: 95,
+      lat: 19.995,
+      lng: -0.015,
+      avatar: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=150&auto=format&fit=crop&q=80',
+      phone: '+27 11 326 7710',
+      email: 'info@cleansweep.co.za',
+      address: '24 Fredman Drive, Sandton Central, Johannesburg',
+      hours: 'Mon - Sun: 07:00 AM - 07:00 PM',
+      description: 'Deep residential cleaning, commercial sanitization, carpet washing, and certified corporate facilities maintenance.',
+      regNumber: '2021/663820/07'
+    },
+    {
+      id: 'b4',
+      name: 'Fashion Hub Retail',
+      category: 'Retail',
+      service: 'Clothing',
+      rating: '4.5',
+      reviews: 200,
+      lat: 20.020,
+      lng: -0.010,
+      avatar: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=150&auto=format&fit=crop&q=80',
+      phone: '+27 11 884 1928',
+      email: 'style@fashionhub.co.za',
+      address: 'Level 4, Sandton City Mall, Sandhurst, Johannesburg',
+      hours: 'Mon - Sun: 09:00 AM - 08:00 PM',
+      description: 'Boutique contemporary apparel, designer accessories, custom tailoring, and premium luxury footwear collections.',
+      regNumber: '2020/554910/07'
+    },
+    {
+      id: 'b5',
+      name: 'Tech World Electronics',
+      category: 'Retail',
+      service: 'Electronics',
+      rating: '4.6',
+      reviews: 150,
+      lat: 19.990,
+      lng: 0.010,
+      avatar: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=150&auto=format&fit=crop&q=80',
+      phone: '+27 11 783 6211',
+      email: 'support@techworld.co.za',
+      address: 'Sandton Boulevard Suite 5, Johannesburg',
+      hours: 'Mon - Sat: 08:30 AM - 06:00 PM',
+      description: 'Computers, smartphones, gaming systems, drone accessories, smart home automation, and certified micro-soldering repairs.',
+      regNumber: '2022/338291/07'
+    },
+    {
+      id: 'b6',
+      name: 'Grand Hotel Oasis',
+      category: 'Hospitality',
+      service: 'Hotel',
+      rating: '4.9',
+      reviews: 300,
+      lat: 20.010,
+      lng: 0.005,
+      avatar: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=150&auto=format&fit=crop&q=80',
+      phone: '+27 11 282 7000',
+      email: 'concierge@grandoasis.co.za',
+      address: 'Corner 5th & Alice Lane, Sandton, Johannesburg',
+      hours: 'Open 24 Hours • 7 Days a Week',
+      description: 'Luxury 5-star hotel featuring state-of-the-art conferencing facilities, spa treatments, rooftop infinity pool, and VIP suites.',
+      regNumber: '2019/128493/07'
+    },
+    {
+      id: 'b7',
+      name: 'Bella Vista Bistro & Grill',
+      category: 'Hospitality',
+      service: 'Restaurant',
+      rating: '4.9',
+      reviews: 240,
+      lat: 20.012,
+      lng: -0.018,
+      avatar: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=150&auto=format&fit=crop&q=80',
+      phone: '+27 11 784 4455',
+      email: 'reservations@bellavista.co.za',
+      address: 'Nelson Mandela Square, Sandton, Johannesburg',
+      hours: 'Mon - Sun: 11:00 AM - 11:00 PM',
+      description: 'Artisanal Mediterranean bistro, flame-grilled steaks, fresh pasta, wood-fired oven pizzas, and award-winning wines.',
+      regNumber: '2020/882739/07'
+    },
+    {
+      id: 'b8',
+      name: 'Sandton Auto Diagnostics',
+      category: 'Services',
+      service: 'Automotive',
+      rating: '4.8',
+      reviews: 110,
+      lat: 19.985,
+      lng: 0.002,
+      avatar: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=150&auto=format&fit=crop&q=80',
+      phone: '+27 11 883 9901',
+      email: 'service@sandtonauto.co.za',
+      address: 'Katherine Street Motor City, Sandton, Johannesburg',
+      hours: 'Mon - Fri: 07:30 AM - 05:30 PM • Sat: 08:00 AM - 01:00 PM',
+      description: 'Diagnostic fault scanning, complete mechanical rebuilds, brake overhaul, gearbox servicing, and Bosch-certified technicians.',
+      regNumber: '2021/449102/07'
+    },
+    {
+      id: 'b9',
+      name: 'CareMed Pharmacy & Clinic',
+      category: 'Services',
+      service: 'Healthcare',
+      rating: '4.9',
+      reviews: 185,
+      lat: 20.025,
+      lng: 0.008,
+      avatar: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=150&auto=format&fit=crop&q=80',
+      phone: '+27 11 884 7722',
+      email: 'dispensary@caremed.co.za',
+      address: 'Sandton Medical Centre, West Street, Johannesburg',
+      hours: 'Mon - Sun: 08:00 AM - 09:00 PM (Emergency Dispensary)',
+      description: 'Full dispensary, chronic medication fulfillment, primary care nurse clinic, health screenings, and wellness supplements.',
+      regNumber: '2018/901283/07'
+    },
+    // AFRICA
+    {
+      id: 'b-jhb',
+      name: 'Sandton Solar & Electrical Works',
+      category: 'Services',
+      service: 'Repair',
+      rating: '4.9',
+      reviews: 142,
+      lat: -26.1076,
+      lng: 28.0567,
+      avatar: 'https://images.unsplash.com/photo-1581092160607-ee2253139366?w=150&auto=format&fit=crop&q=80',
+      phone: '+27 11 784 9200',
+      email: 'orders@sandtonsolar.co.za',
+      address: 'Shop 12, Rivonia Road, Sandton, Johannesburg, South Africa',
+      hours: 'Mon - Sat: 08:00 AM - 05:30 PM',
+      description: 'Certified electrical equipment, solar inverter components, commercial cabling, breakers, and on-site expert consultation.',
+      regNumber: '2023/182904/07'
+    },
+    {
+      id: 'b-cpt',
+      name: 'Atlantic Marine & Solar Tech',
+      category: 'Services',
+      service: 'Repair',
+      rating: '4.8',
+      reviews: 98,
+      lat: -33.9249,
+      lng: 18.4241,
+      avatar: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=150&auto=format&fit=crop&q=80',
+      phone: '+27 21 424 8800',
+      email: 'info@atlanticmarine.co.za',
+      address: 'V&A Waterfront Marina, Cape Town, South Africa',
+      hours: 'Mon - Fri: 08:00 AM - 06:00 PM',
+      description: 'Marine electrical refits, coastal off-grid solar generators, and nautical navigation equipment servicing.',
+      regNumber: '2022/448102/07'
+    },
+    {
+      id: 'b-nbo',
+      name: 'Nairobi Silicon Savannah Power & IoT',
+      category: 'Services',
+      service: 'Electronics',
+      rating: '4.9',
+      reviews: 115,
+      lat: -1.2921,
+      lng: 36.8219,
+      avatar: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=150&auto=format&fit=crop&q=80',
+      phone: '+254 20 271 4455',
+      email: 'contact@siliconsavannah.ke',
+      address: 'Westlands Tech District, Nairobi, Kenya',
+      hours: 'Mon - Sat: 08:30 AM - 06:00 PM',
+      description: 'Smart grid management, distributed telecom systems, micro-hydro controllers, and corporate IoT automation.',
+      regNumber: 'CPR/2021/99210'
+    },
+    {
+      id: 'b-los',
+      name: 'Lagos Atlantic Mega Trade & Logistics',
+      category: 'Retail',
+      service: 'Electronics',
+      rating: '4.7',
+      reviews: 210,
+      lat: 6.5244,
+      lng: 3.3792,
+      avatar: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=150&auto=format&fit=crop&q=80',
+      phone: '+234 1 280 5000',
+      email: 'dispatch@lagosmegatrade.ng',
+      address: 'Victoria Island Commercial Hub, Lagos, Nigeria',
+      hours: 'Mon - Sat: 08:00 AM - 07:00 PM',
+      description: 'High-volume international consumer tech, enterprise computing hardware, and multimodal air/sea freight.',
+      regNumber: 'RC-1849201'
+    },
+    {
+      id: 'b-cai',
+      name: 'Nile Artisans & Luxury Hospitality',
+      category: 'Hospitality',
+      service: 'Hotel',
+      rating: '4.9',
+      reviews: 320,
+      lat: 30.0444,
+      lng: 31.2357,
+      avatar: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=150&auto=format&fit=crop&q=80',
+      phone: '+20 2 2795 7000',
+      email: 'reservations@nileartisans.eg',
+      address: 'Corniche El Nil, Downtown Cairo, Egypt',
+      hours: 'Open 24 Hours • 7 Days a week',
+      description: 'Boutique riverfront hotel, private historical excursions, executive board suites, and traditional gourmet dining.',
+      regNumber: 'EG-774910'
+    },
+
+    // EUROPE
+    {
+      id: 'b-lon',
+      name: 'Westminster Engineering & Tech Hub',
+      category: 'Services',
+      service: 'Repair',
+      rating: '4.9',
+      reviews: 245,
+      lat: 51.5074,
+      lng: -0.1278,
+      avatar: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=150&auto=format&fit=crop&q=80',
+      phone: '+44 20 7946 0192',
+      email: 'concierge@westminstertech.co.uk',
+      address: '45 Victoria Street, Westminster, London, UK',
+      hours: 'Mon - Fri: 08:00 AM - 06:30 PM',
+      description: 'Precision structural assessments, commercial electrical retrofits, and high-security smart office infrastructure.',
+      regNumber: 'UK-08491204'
+    },
+    {
+      id: 'b-par',
+      name: 'Champs-Élysées Atelier & Bistro',
+      category: 'Hospitality',
+      service: 'Restaurant',
+      rating: '4.9',
+      reviews: 380,
+      lat: 48.8566,
+      lng: 2.3522,
+      avatar: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=150&auto=format&fit=crop&q=80',
+      phone: '+33 1 42 68 55 00',
+      email: 'bonjour@atelierchamps.fr',
+      address: '78 Avenue des Champs-Élysées, Paris, France',
+      hours: 'Mon - Sun: 11:30 AM - 11:30 PM',
+      description: 'Michelin-recognized French culinary artistry, rare grand cru wine collections, and bespoke private salon dining.',
+      regNumber: 'FR-491028491'
+    },
+    {
+      id: 'b-ber',
+      name: 'Berlin Mitte GreenTech & Precision',
+      category: 'Manufacturing',
+      service: 'Repair',
+      rating: '4.8',
+      reviews: 175,
+      lat: 52.5200,
+      lng: 13.4050,
+      avatar: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&auto=format&fit=crop&q=80',
+      phone: '+49 30 2095 8800',
+      email: 'kontakt@mittegreentech.de',
+      address: 'Friedrichstraße 112, Berlin Mitte, Germany',
+      hours: 'Mon - Fri: 08:00 AM - 05:00 PM',
+      description: 'German high-precision micro-tooling, thermal heat pumps, and ISO-9001 certified industrial automation.',
+      regNumber: 'DE-HRB-89102'
+    },
+    {
+      id: 'b-ams',
+      name: 'Keizersgracht Sustainable Design',
+      category: 'Retail',
+      service: 'Clothing',
+      rating: '4.8',
+      reviews: 130,
+      lat: 52.3676,
+      lng: 4.9041,
+      avatar: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=150&auto=format&fit=crop&q=80',
+      phone: '+31 20 624 3311',
+      email: 'hello@keizersdesign.nl',
+      address: 'Keizersgracht 421, Amsterdam, Netherlands',
+      hours: 'Tue - Sun: 10:00 AM - 06:00 PM',
+      description: 'Circular architectural furnishings, urban e-mobility hardware, and zero-waste designer apparel.',
+      regNumber: 'NL-KVK-341908'
+    },
+    {
+      id: 'b-rom',
+      name: 'Roma Antica Restoration & Bistro',
+      category: 'Hospitality',
+      service: 'Restaurant',
+      rating: '4.9',
+      reviews: 290,
+      lat: 41.9028,
+      lng: 12.4964,
+      avatar: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=150&auto=format&fit=crop&q=80',
+      phone: '+39 06 6987 4120',
+      email: 'prenotazioni@romaantica.it',
+      address: 'Via del Corso 85, Rome, Italy',
+      hours: 'Mon - Sun: 12:00 PM - 11:00 PM',
+      description: 'Historic Roman culinary traditions, stone-oven Pinsa, and heritage facade architectural masonry services.',
+      regNumber: 'IT-RM-994821'
+    },
+
+    // NORTH AMERICA
+    {
+      id: 'b-nyc',
+      name: 'Manhattan Commercial HVAC & Mechanical',
+      category: 'Services',
+      service: 'Plumbing',
+      rating: '4.9',
+      reviews: 310,
+      lat: 40.7128,
+      lng: -74.0060,
+      avatar: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=150&auto=format&fit=crop&q=80',
+      phone: '+1 212 555 0199',
+      email: 'dispatch@manhattanhvac.com',
+      address: '350 5th Avenue, New York, NY 10118, USA',
+      hours: '24/7 Emergency Commercial Dispatch',
+      description: 'Commercial high-rise boilers, chillers, certified master plumbing, and building management system maintenance.',
+      regNumber: 'NY-DOS-5582910'
+    },
+    {
+      id: 'b-sfo',
+      name: 'Silicon Valley Robotics & Automation Labs',
+      category: 'Services',
+      service: 'Electronics',
+      rating: '4.9',
+      reviews: 420,
+      lat: 37.7749,
+      lng: -122.4194,
+      avatar: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=150&auto=format&fit=crop&q=80',
+      phone: '+1 415 555 0142',
+      email: 'labs@siliconrobotics.io',
+      address: '500 Howard Street, San Francisco, CA 94105, USA',
+      hours: 'Mon - Fri: 08:30 AM - 06:30 PM',
+      description: 'Autonomous robotics rapid prototyping, drone fleet telemetry, and enterprise edge computing deployments.',
+      regNumber: 'CA-SOS-C4819023'
+    },
+    {
+      id: 'b-tor',
+      name: 'Bay Street Corporate Facilities Group',
+      category: 'Services',
+      service: 'Cleaning',
+      rating: '4.8',
+      reviews: 165,
+      lat: 43.6532,
+      lng: -79.3832,
+      avatar: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=150&auto=format&fit=crop&q=80',
+      phone: '+1 416 555 0188',
+      email: 'operations@baystreetcorporate.ca',
+      address: '100 King Street West, Toronto, ON M5X 1A9, Canada',
+      hours: 'Mon - Sun: 07:00 AM - 08:00 PM',
+      description: 'Hospital-grade sanitization, LEED green building maintenance, and enterprise facilities management.',
+      regNumber: 'ON-CORP-9481920'
+    },
+    {
+      id: 'b-lax',
+      name: 'Beverly Hills Luxury Living & Sound',
+      category: 'Retail',
+      service: 'Electronics',
+      rating: '4.9',
+      reviews: 260,
+      lat: 34.0522,
+      lng: -118.2437,
+      avatar: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=150&auto=format&fit=crop&q=80',
+      phone: '+1 310 555 0177',
+      email: 'vip@beverlysound.com',
+      address: 'Rodeo Drive & Wilshire Blvd, Beverly Hills, CA 90212, USA',
+      hours: 'Mon - Sat: 10:00 AM - 07:00 PM',
+      description: 'High-end cinema acoustics, audiophile studio gear, bespoke home theaters, and luxury automation.',
+      regNumber: 'CA-SOS-L910284'
+    },
+
+    // ASIA & MIDDLE EAST
+    {
+      id: 'b-tyo',
+      name: 'Shibuya Quantum Robotics & Tech',
+      category: 'Manufacturing',
+      service: 'Electronics',
+      rating: '5.0',
+      reviews: 480,
+      lat: 35.6762,
+      lng: 139.6503,
+      avatar: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=150&auto=format&fit=crop&q=80',
+      phone: '+81 3 5555 0192',
+      email: 'info@shibuyaquantum.jp',
+      address: '2 Chome-24-1 Shibuya, Tokyo 150-0002, Japan',
+      hours: 'Mon - Sat: 09:00 AM - 07:00 PM',
+      description: 'Next-gen cobots, advanced sensor micro-chips, robotic arms, and optical quantum precision devices.',
+      regNumber: 'JP-9010-01-084920'
+    },
+    {
+      id: 'b-dxb',
+      name: 'Burj Emirates Solar & Engineering',
+      category: 'Services',
+      service: 'Repair',
+      rating: '4.9',
+      reviews: 350,
+      lat: 25.2048,
+      lng: 55.2708,
+      avatar: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=150&auto=format&fit=crop&q=80',
+      phone: '+971 4 367 3333',
+      email: 'contracts@burjemirates.ae',
+      address: 'Sheikh Zayed Road, Downtown Dubai, UAE',
+      hours: 'Mon - Sat: 08:00 AM - 06:00 PM',
+      description: 'Mega-scale desert solar installations, luxury facade engineering, and intelligent HVAC chilled water systems.',
+      regNumber: 'DED-884910'
+    },
+    {
+      id: 'b-sin',
+      name: 'Marina Bay Global Maritime Logistics',
+      category: 'Services',
+      service: 'Repair',
+      rating: '4.9',
+      reviews: 280,
+      lat: 1.3521,
+      lng: 103.8198,
+      avatar: 'https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=150&auto=format&fit=crop&q=80',
+      phone: '+65 6789 0123',
+      email: 'port@marinaglobal.sg',
+      address: '10 Marina Boulevard, Marina Bay Financial Centre, Singapore',
+      hours: '24/7 Port and Technical Operations',
+      description: 'Deep-water vessel telemetry, port automation, green bunkering solutions, and maritime cargo analytics.',
+      regNumber: 'SG-UEN-201948201M'
+    },
+    {
+      id: 'b-bom',
+      name: 'Bandra Global Software & Enterprise Solutions',
+      category: 'Services',
+      service: 'Electronics',
+      rating: '4.8',
+      reviews: 310,
+      lat: 19.0760,
+      lng: 72.8777,
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+      phone: '+91 22 6123 4567',
+      email: 'enterprise@bandraglobal.in',
+      address: 'Bandra Kurla Complex (BKC), Mumbai 400051, India',
+      hours: 'Mon - Fri: 09:00 AM - 07:00 PM',
+      description: 'Enterprise ERP systems, financial switch architecture, cloud microservices, and IT infrastructure hardening.',
+      regNumber: 'IN-CIN-U72200MH2020PTC34819'
+    },
+
+    // OCEANIA
+    {
+      id: 'b-syd',
+      name: 'Sydney Harbour Renewable Contracting',
+      category: 'Services',
+      service: 'Repair',
+      rating: '4.9',
+      reviews: 220,
+      lat: -33.8688,
+      lng: 151.2093,
+      avatar: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=150&auto=format&fit=crop&q=80',
+      phone: '+61 2 9234 5678',
+      email: 'enquiries@sydneyrenewables.com.au',
+      address: 'Pitt Street Commercial Center, Sydney NSW 2000, Australia',
+      hours: 'Mon - Fri: 07:30 AM - 05:30 PM',
+      description: 'Commercial rooftop solar micro-inverters, Tesla Powerwall integration, and commercial electrical compliance.',
+      regNumber: 'ABN 48 910 284 910'
+    },
+    {
+      id: 'b-akl',
+      name: 'Auckland Pacific Builders & Marine',
+      category: 'Manufacturing',
+      service: 'Repair',
+      rating: '4.8',
+      reviews: 140,
+      lat: -36.8485,
+      lng: 174.7633,
+      avatar: 'https://images.unsplash.com/photo-1541888946425-d0fbb186156a?w=150&auto=format&fit=crop&q=80',
+      phone: '+64 9 377 8899',
+      email: 'build@pacificmarine.co.nz',
+      address: 'Viaduct Harbour, Auckland 1010, New Zealand',
+      hours: 'Mon - Fri: 08:00 AM - 05:00 PM',
+      description: 'Earthquake-resilient commercial carpentry, carbon fiber marine composite fabrication, and civil engineering.',
+      regNumber: 'NZBN 942904819201'
+    },
+
+    // SOUTH AMERICA
+    {
+      id: 'b-sao',
+      name: 'Paulista Green Energy & Industrial Works',
+      category: 'Services',
+      service: 'Repair',
+      rating: '4.8',
+      reviews: 215,
+      lat: -23.5505,
+      lng: -46.6333,
+      avatar: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=150&auto=format&fit=crop&q=80',
+      phone: '+55 11 3145 6700',
+      email: 'contato@paulistaenergia.com.br',
+      address: 'Avenida Paulista 1578, São Paulo, SP, Brazil',
+      hours: 'Mon - Fri: 08:00 AM - 06:00 PM',
+      description: 'Biofuel generators, photovoltaic solar park maintenance, and industrial high-voltage transformer substations.',
+      regNumber: 'CNPJ 38.910.284/0001-92'
     }
   ]);
   const [seekersListings, setSeekersListings] = useState([
@@ -1331,6 +2137,48 @@ export default function App() {
       lng: -0.019,
       avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80',
       isVerified: true
+    },
+    {
+      id: 's9',
+      name: 'Fatima Isaacs',
+      role: 'Tiler & Flooring Specialist',
+      trade: 'Tiler',
+      hourly: 'R 240/hr',
+      rating: '4.7',
+      reviews: 22,
+      contact: '+27 (0) 73 987 6543',
+      lat: 20.015,
+      lng: 0.025,
+      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+      isVerified: true
+    },
+    {
+      id: 's10',
+      name: 'Zanele Ndlovu',
+      role: 'Landscaper & Garden Designer',
+      trade: 'Gardener',
+      hourly: 'R 190/hr',
+      rating: '4.8',
+      reviews: 18,
+      contact: '+27 (0) 82 345 6789',
+      lat: 20.005,
+      lng: -0.022,
+      avatar: 'https://images.unsplash.com/photo-1531123897727-8f129e16fd3c?w=150&auto=format&fit=crop&q=80',
+      isVerified: true
+    },
+    {
+      id: 's11',
+      name: 'Kabelo Molefe',
+      role: 'Interior Painter & Decorator',
+      trade: 'Painter',
+      hourly: 'R 210/hr',
+      rating: '4.6',
+      reviews: 25,
+      contact: '+27 (0) 71 876 5432',
+      lat: 19.985,
+      lng: 0.015,
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+      isVerified: true
     }
   ]);
 
@@ -1391,9 +2239,12 @@ export default function App() {
     seekerTrade: string;
     seekerRate: string;
     seekerContact: string;
+    seekerPhone?: string;
+    service?: string;
     seekerOrigin: [number, number];
     seekerCurrentPos: [number, number];
     userTargetPos: [number, number];
+    userDest?: [number, number];
     status: 'requesting' | 'guiding' | 'arrived' | 'completed' | 'declined';
     countdown: number; // 60s countdown
     route: [number, number][];
@@ -1409,7 +2260,302 @@ export default function App() {
   const [showGigSummaryModal, setShowGigSummaryModal] = useState<boolean>(false);
   const [lastCompletedGig, setLastCompletedGig] = useState<ActiveGigSession | null>(null);
 
-  // Start Hiring Seeker Flow (Opens 60-Second Circular Countdown Loading)
+  // Restaurant guidance flow states
+  const [showRestaurantListModal, setShowRestaurantListModal] = useState<boolean>(false);
+  const [selectedRestaurant, setSelectedRestaurant] = useState<any | null>(null);
+  const [isRestaurantGuiding, setIsRestaurantGuiding] = useState<boolean>(false);
+
+  // Business Submission / Account Registration states
+  const [showCreateBusinessModal, setShowCreateBusinessModal] = useState<boolean>(false);
+  const [showBusinessSubmissionsModal, setShowBusinessSubmissionsModal] = useState<boolean>(false);
+  // Selected Business Full Profile Modal state (opened when clicking business on the map)
+  const [selectedBusinessProfile, setSelectedBusinessProfile] = useState<any | null>(null);
+
+  // Social Media Share Modal states
+  const [shareBusinessModal, setShareBusinessModal] = useState<any | null>(null);
+  const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
+
+  const handleBusinessMarkerClick = (biz: any) => {
+    playReviewChime();
+    // Zoom in directly to the exact location of the business
+    setFlyToTrigger({
+      lat: biz.lat,
+      lng: biz.lng,
+      zoom: 18
+    });
+    // Open full profile information modal with profile logo attached
+    setSelectedBusinessProfile(biz);
+  };
+
+  // Direct user from user exact location to business exact location on the map
+  const directToBusiness = async (biz: any) => {
+    playReviewChime();
+    setSelectedBusinessProfile(null);
+    setAutoCenter(false);
+
+    // 1. Obtain user exact location; request from browser GPS if not ready, or fallback to anchor
+    let origin = userPos;
+    if (!origin || !isValidCoordinate(origin[0], origin[1])) {
+      if (navigator.geolocation) {
+        try {
+          const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 3500, enableHighAccuracy: true });
+          });
+          if (position?.coords && isValidCoordinate(position.coords.latitude, position.coords.longitude)) {
+            origin = [position.coords.latitude, position.coords.longitude];
+            setUserPos(origin);
+            setAccuracy(position.coords.accuracy || 50);
+            setGeoState('found');
+          }
+        } catch (e) {
+          console.warn("Direct geolocation lookup timed out, fallback to anchor", e);
+        }
+      }
+      if (!origin || !isValidCoordinate(origin[0], origin[1])) {
+        origin = [20.000, 0.000];
+        setUserPos(origin);
+      }
+    }
+
+    // 2. Calculate and render directions on map
+    await calculateRouteTo(biz.lat, biz.lng, {
+      name: biz.name,
+      avatar: biz.avatar,
+      category: biz.category,
+      service: biz.service,
+      address: biz.address
+    }, origin);
+  };
+
+  // Helper to generate full social share details and exact deep links for a business
+  const getBusinessShareDetails = (biz: any) => {
+    if (!biz) {
+      return {
+        exactLink: window.location.href,
+        googleMapsUrl: '',
+        shareMessage: '',
+        tweetText: ''
+      };
+    }
+    const origin = window.location.origin;
+    const path = window.location.pathname;
+    const exactLink = `${origin}${path}?bizId=${biz.id || 'biz'}&lat=${biz.lat}&lng=${biz.lng}&bizName=${encodeURIComponent(biz.name || 'Business')}`;
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${biz.lat},${biz.lng}`;
+    const shareMessage = `📍 ${biz.name}\n${biz.category ? `${biz.category} • ` : ''}${biz.service || 'Business'}\n⭐ Rating: ${biz.rating || '5.0'} (${biz.reviews || 0} reviews)\n🏢 Address: ${biz.address || 'Sandton, Johannesburg'}\n\n🗺️ Open exact location on TimeGig Map:\n${exactLink}\n\n🧭 Google Maps pin:\n${googleMapsUrl}`;
+    const tweetText = `📍 Location of ${biz.name} (${biz.category || 'Business'}) on the map:`;
+
+    return {
+      exactLink,
+      googleMapsUrl,
+      shareMessage,
+      tweetText
+    };
+  };
+
+  // Direct user to external social media apps with exact link
+  const shareToPlatform = (platform: 'whatsapp' | 'x' | 'facebook' | 'telegram' | 'linkedin' | 'sms' | 'email' | 'googlemaps' | 'native', biz: any) => {
+    const { exactLink, googleMapsUrl, shareMessage, tweetText } = getBusinessShareDetails(biz);
+
+    switch (platform) {
+      case 'whatsapp': {
+        const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+        window.open(url, '_blank');
+        break;
+      }
+      case 'x': {
+        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(exactLink)}`;
+        window.open(url, '_blank');
+        break;
+      }
+      case 'facebook': {
+        const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(exactLink)}&quote=${encodeURIComponent(`📍 ${biz.name} Location`)}`;
+        window.open(url, '_blank');
+        break;
+      }
+      case 'telegram': {
+        const url = `https://t.me/share/url?url=${encodeURIComponent(exactLink)}&text=${encodeURIComponent(`📍 ${biz.name} - ${biz.address || 'Exact location'}`)}`;
+        window.open(url, '_blank');
+        break;
+      }
+      case 'linkedin': {
+        const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(exactLink)}`;
+        window.open(url, '_blank');
+        break;
+      }
+      case 'sms': {
+        const url = `sms:?body=${encodeURIComponent(shareMessage)}`;
+        window.open(url, '_self');
+        break;
+      }
+      case 'email': {
+        const url = `mailto:?subject=${encodeURIComponent(`Business Location: ${biz.name}`)}&body=${encodeURIComponent(shareMessage)}`;
+        window.open(url, '_self');
+        break;
+      }
+      case 'googlemaps': {
+        window.open(googleMapsUrl, '_blank');
+        break;
+      }
+      case 'native': {
+        if (navigator.share) {
+          navigator.share({
+            title: biz.name,
+            text: shareMessage,
+            url: exactLink
+          }).catch(() => {});
+        } else {
+          navigator.clipboard?.writeText(exactLink);
+          setCopiedShareLink(true);
+          setTimeout(() => setCopiedShareLink(false), 2500);
+        }
+        break;
+      }
+    }
+  };
+  const [businessSubmissions, setBusinessSubmissions] = useState<any[]>([
+    {
+      id: 'biz-1',
+      name: 'Apex Solar & Electrical',
+      category: 'Services',
+      service: 'Repair',
+      ownerName: 'Thabo Khumalo',
+      contact: '+27 82 456 7890',
+      email: 'apex@solar.co.za',
+      address: '14 Oxford Road, Sandton, Johannesburg',
+      regNumber: '2024/589123/07',
+      documents: [
+        {
+          id: 'def-1',
+          name: 'CIPC_Registration_Certificate.pdf',
+          category: 'CIPC Certificate',
+          size: '340 KB',
+          type: 'application/pdf',
+          dataUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&auto=format&fit=crop&q=80'
+        }
+      ],
+      status: 'pending',
+      submittedAt: new Date(Date.now() - 3600000).toISOString()
+    }
+  ]);
+  const [inspectingBusinessDoc, setInspectingBusinessDoc] = useState<any | null>(null);
+  const [activeInspectedDocIdx, setActiveInspectedDocIdx] = useState<number>(0);
+
+  // Uploaded Business Documents Interface
+  interface UploadedBusinessDoc {
+    id: string;
+    name: string;
+    size: string;
+    category: string;
+    type: string;
+    dataUrl: string;
+  }
+
+  // New business form state
+  const [newBizName, setNewBizName] = useState('');
+  const [newBizCategory, setNewBizCategory] = useState('Retail');
+  const [newBizService, setNewBizService] = useState('Clothing');
+  const [newBizOwnerName, setNewBizOwnerName] = useState('');
+  const [newBizContact, setNewBizContact] = useState('');
+  const [newBizEmail, setNewBizEmail] = useState('');
+  const [newBizAddress, setNewBizAddress] = useState('');
+  const [newBizRegNumber, setNewBizRegNumber] = useState('');
+  const [newBizHours, setNewBizHours] = useState('Mon - Fri: 08:00 AM - 05:00 PM');
+  const [newBizDocName, setNewBizDocName] = useState('Business_Reg_And_Tax_Clearance.pdf');
+  const [newBizDocUrl, setNewBizDocUrl] = useState('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=80');
+
+  // Business Documents & Logo uploaded from device
+  const [newBizDocs, setNewBizDocs] = useState<UploadedBusinessDoc[]>([
+    {
+      id: 'default-cipc',
+      name: 'CIPC_Registration_Certificate.pdf',
+      size: '340 KB',
+      category: 'CIPC Certificate',
+      type: 'application/pdf',
+      dataUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=80'
+    }
+  ]);
+  const [newBizLogoUrl, setNewBizLogoUrl] = useState<string>('');
+  const [newBizLogoName, setNewBizLogoName] = useState<string>('');
+
+  // Handle multi-document upload selection from device
+  const handleDocumentFilesSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    Array.from(files).forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const dataUrl = event.target?.result as string;
+        const sizeFormatted = file.size > 1024 * 1024 
+          ? `${(file.size / (1024 * 1024)).toFixed(1)} MB` 
+          : `${Math.max(1, Math.round(file.size / 1024))} KB`;
+
+        let detectedCat = 'CIPC Certificate';
+        const lowerName = file.name.toLowerCase();
+        if (lowerName.includes('tax') || lowerName.includes('sars') || lowerName.includes('pin') || lowerName.includes('vat')) {
+          detectedCat = 'Tax Clearance';
+        } else if (lowerName.includes('address') || lowerName.includes('utility') || lowerName.includes('lease') || lowerName.includes('bill')) {
+          detectedCat = 'Proof of Address';
+        } else if (lowerName.includes('id') || lowerName.includes('passport') || lowerName.includes('director')) {
+          detectedCat = 'Director ID / Passport';
+        } else if (lowerName.includes('bank') || lowerName.includes('statement') || lowerName.includes('cheque')) {
+          detectedCat = 'Bank Confirmation Letter';
+        } else if (lowerName.includes('license') || lowerName.includes('licence') || lowerName.includes('trade')) {
+          detectedCat = 'Trade / Operating License';
+        } else if (lowerName.includes('cipc') || lowerName.includes('reg') || lowerName.includes('incorporation')) {
+          detectedCat = 'CIPC Certificate';
+        } else {
+          detectedCat = 'Other';
+        }
+
+        const newDoc: UploadedBusinessDoc = {
+          id: `doc-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+          name: file.name,
+          size: sizeFormatted,
+          type: file.type || (file.name.endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream'),
+          category: detectedCat,
+          dataUrl
+        };
+
+        setNewBizDocs(prev => [...prev, newDoc]);
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = '';
+  };
+
+  // Handle business logo upload from device
+  const handleLogoFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setNewBizLogoUrl(event.target?.result as string);
+      setNewBizLogoName(file.name);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  // In businesses feature icon show only the map
+  const handleBusinessesTabClick = () => {
+    playReviewChime();
+    setShowBusinessFilter(false);
+    setSelectedIndustry(null);
+    setSelectedService(null);
+
+    const nextTab = activeBottomTab === 'businesses' ? null : 'businesses';
+    setActiveBottomTab(nextTab);
+
+    // Fly to a global perspective when clicking businesses tab to see pins worldwide
+    if (nextTab === 'businesses' && businessesListings.length > 0) {
+      setFlyToTrigger({
+        lat: 20,
+        lng: 0,
+        zoom: 3
+      });
+    }
+  };
   const startHiringFlow = (seeker: any) => {
     playReviewChime();
     const userDest: [number, number] = userPos && isValidCoordinate(userPos[0], userPos[1])
@@ -2137,6 +3283,57 @@ export default function App() {
         navigator.geolocation.clearWatch(id);
       }
     };
+  }, []);
+
+  // Check URL query parameters for shared business exact location links
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const bizId = params.get('bizId');
+      const latParam = params.get('lat');
+      const lngParam = params.get('lng');
+
+      if (latParam && lngParam) {
+        const lat = parseFloat(latParam);
+        const lng = parseFloat(lngParam);
+        if (isValidCoordinate(lat, lng)) {
+          setActiveBottomTab('businesses');
+          setAutoCenter(false);
+          setFlyToTrigger({ lat, lng, zoom: 18 });
+
+          setTimeout(() => {
+            setBusinessesListings(prev => {
+              const found = prev.find(b => b.id === bizId || (Math.abs(b.lat - lat) < 0.001 && Math.abs(b.lng - lng) < 0.001));
+              if (found) {
+                setSelectedBusinessProfile(found);
+                return prev;
+              }
+              const sharedBiz = {
+                id: bizId || `shared-${Date.now()}`,
+                name: params.get('bizName') || 'Shared Business Location',
+                category: 'Services',
+                service: 'Business',
+                rating: '5.0',
+                reviews: 1,
+                lat,
+                lng,
+                avatar: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=150&auto=format&fit=crop&q=80',
+                address: 'Exact shared location coordinates',
+                hours: 'Mon - Sat: 08:00 AM - 06:00 PM',
+                description: 'Direct location shared via TimeGig Map.',
+                phone: '+27 11 883 4000',
+                email: 'info@sharedbusiness.co.za',
+                regNumber: '2026/000000/07 (SARS & CIPC Compliant)'
+              };
+              setSelectedBusinessProfile(sharedBiz);
+              return [...prev, sharedBiz];
+            });
+          }, 600);
+        }
+      }
+    } catch (e) {
+      console.warn("Shared link parsing guarded:", e);
+    }
   }, []);
 
   // Trigger geocoding upon finding userPos
@@ -5964,102 +7161,200 @@ export default function App() {
         </div>
       )}
 
-      {/* 3. Floating Tool & Layer Sidebar */}
-      <div className="absolute right-4 top-20 z-[1000] flex flex-col gap-2.5 pointer-events-auto">
-        {/* User Location Floating Button (On top of Map Theme Styles) */}
-        <button
-          onClick={handleLocationButtonClick}
-          title="Fly straight to my exact GPS location"
-          className={`flex items-center justify-center w-11 h-11 rounded-2xl glossy-3d-container shadow-lg border transition-all duration-200 active:scale-90 ${
-            showPinpointer && userPos
-              ? 'bg-blue-600 text-white border-blue-700 hover:bg-blue-700'
-              : 'bg-white text-slate-700 border-slate-200/80'
-          }`}
-        >
-          {geoState === 'locating' ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <Crosshair className={`w-5 h-5 icon-shadow-3d ${showPinpointer && userPos ? 'scale-110' : ''}`} />
-          )}
-        </button>
+      {/* Active Navigation HUD Banner - Directs user from exact location to business */}
+      {activeNavRoute && (
+        <div className="absolute top-20 left-4 right-16 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto z-[1050] max-w-md w-auto sm:w-[420px] pointer-events-auto animate-in slide-in-from-top-3 duration-200">
+          <div className="bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-3xl shadow-2xl p-3 sm:p-4 text-white">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="relative shrink-0">
+                  <img
+                    src={activeNavRoute.destAvatar || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=150&auto=format&fit=crop&q=80'}
+                    alt={activeNavRoute.destName}
+                    className="w-11 h-11 rounded-2xl object-cover border border-white/20 shadow-md"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border border-slate-900 flex items-center justify-center text-[10px]">
+                    📍
+                  </div>
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">Directing on Map</span>
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-black text-white truncate leading-tight mt-0.5">
+                    {activeNavRoute.destName}
+                  </h4>
+                  <div className="flex items-center gap-2 text-xs font-bold text-slate-300 mt-0.5">
+                    <span className="text-amber-400 font-extrabold">{activeNavRoute.distance}</span>
+                    <span>•</span>
+                    <span className="text-slate-300">{activeNavRoute.duration}</span>
+                  </div>
+                </div>
+              </div>
 
-        {/* Map Styles Layer Config Selector Trigger */}
-        <div className="relative">
+              <button
+                onClick={() => {
+                  setActiveNavRoute(null);
+                  setRoutePoints([]);
+                  setRouteDetails(null);
+                }}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-all shrink-0"
+                title="Exit Navigation"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Navigation Quick Action Buttons */}
+            <div className="grid grid-cols-2 gap-2 mt-3 pt-2.5 border-t border-slate-800">
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&origin=${userPos ? `${userPos[0]},${userPos[1]}` : ''}&destination=${activeNavRoute.destLat},${activeNavRoute.destLng}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-95"
+              >
+                <Navigation className="w-3.5 h-3.5" />
+                <span>Open in Google Maps</span>
+              </a>
+
+              <button
+                onClick={() => {
+                  setShareBusinessModal({
+                    id: 'nav-dest',
+                    name: activeNavRoute.destName,
+                    lat: activeNavRoute.destLat,
+                    lng: activeNavRoute.destLng,
+                    avatar: activeNavRoute.destAvatar,
+                    category: activeNavRoute.destCategory || 'Business',
+                    service: activeNavRoute.destService || 'Services',
+                    address: activeNavRoute.destAddress || 'View on map'
+                  });
+                }}
+                className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-extrabold text-[11px] flex items-center justify-center gap-1.5 border border-slate-700 transition-all active:scale-95"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                <span>Share Location</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Floating Tool & Layer Sidebar */}
+      <div className="absolute right-4 top-20 bottom-24 z-[1000] flex flex-col gap-2.5 pointer-events-auto">
+          {/* User Location Floating Button (On top of Map Theme Styles) */}
           <button
-            onClick={() => setShowThemePanel(!showThemePanel)}
-            title="Toggle map styles"
+            onClick={handleLocationButtonClick}
+            title="Fly straight to my exact GPS location"
             className={`flex items-center justify-center w-11 h-11 rounded-2xl glossy-3d-container shadow-lg border transition-all duration-200 active:scale-90 ${
-              showThemePanel 
-                ? 'bg-slate-900 text-white border-slate-800' 
+              showPinpointer && userPos
+                ? 'bg-blue-600 text-white border-blue-700 hover:bg-blue-700'
                 : 'bg-white text-slate-700 border-slate-200/80'
             }`}
           >
-            <FlatIcon icon={FileText} className="w-9 h-9" />
+            {geoState === 'locating' ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <Crosshair className={`w-5 h-5 icon-shadow-3d ${showPinpointer && userPos ? 'scale-110' : ''}`} />
+            )}
           </button>
 
-          {/* Dynamic Map Theme Selection Drawer */}
-          {showThemePanel && (
-            <div className="absolute right-14 top-0 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-slate-200/80 w-64 animate-in slide-in-from-right-3 fade-in duration-200 z-[1000]">
-              <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
-                <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                  <MapIcon className="w-3.5 h-3.5 text-blue-500" />
-                  Map Theme Styles
-                </span>
-                <button 
-                  onClick={() => setShowThemePanel(false)}
-                  className="text-slate-400 hover:text-slate-600 p-0.5"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-              <div className="flex flex-col gap-2">
-                {MAP_THEMES.map((theme) => (
-                  <button
-                    key={theme.id}
-                    onClick={() => setActiveTheme(theme)}
-                    className={`text-left px-3 py-2 rounded-xl transition-all duration-150 flex items-start flex-col ${
-                      activeTheme.id === theme.id
-                        ? 'bg-blue-50 border border-blue-200 text-blue-900'
-                        : 'hover:bg-slate-50 text-slate-700 border border-transparent'
-                    }`}
+          {/* Map Styles Layer Config Selector Trigger */}
+          <div className="relative">
+            <button
+              onClick={() => setShowThemePanel(!showThemePanel)}
+              title="Toggle map styles"
+              className={`flex items-center justify-center w-11 h-11 rounded-2xl glossy-3d-container shadow-lg border transition-all duration-200 active:scale-90 ${
+                showThemePanel 
+                  ? 'bg-slate-900 text-white border-slate-800' 
+                  : 'bg-white text-slate-700 border-slate-200/80'
+              }`}
+            >
+              <FlatIcon icon={FileText} className="w-9 h-9" />
+            </button>
+
+            {/* Dynamic Map Theme Selection Drawer */}
+            {showThemePanel && (
+              <div className="absolute right-14 top-0 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-slate-200/80 w-64 animate-in slide-in-from-right-3 fade-in duration-200 z-[1000]">
+                <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
+                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <MapIcon className="w-3.5 h-3.5 text-blue-500" />
+                    Map Theme Styles
+                  </span>
+                  <button 
+                    onClick={() => setShowThemePanel(false)}
+                    className="text-slate-400 hover:text-slate-600 p-0.5"
                   >
-                    <span className="text-xs font-bold leading-tight flex items-center justify-between w-full">
-                      {theme.name}
-                      {activeTheme.id === theme.id && <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />}
-                    </span>
-                    <span className="text-[10px] text-slate-500 mt-0.5 leading-snug">
-                      {theme.description}
-                    </span>
+                    <X className="w-3.5 h-3.5" />
                   </button>
-                ))}
+                </div>
+                <div className="flex flex-col gap-2">
+                  {MAP_THEMES.map((theme) => (
+                    <button
+                      key={theme.id}
+                      onClick={() => setActiveTheme(theme)}
+                      className={`text-left px-3 py-2 rounded-xl transition-all duration-150 flex items-start flex-col ${
+                        activeTheme.id === theme.id
+                          ? 'bg-blue-50 border border-blue-200 text-blue-900'
+                          : 'hover:bg-slate-50 text-slate-700 border border-transparent'
+                      }`}
+                    >
+                      <span className="text-xs font-bold leading-tight flex items-center justify-between w-full">
+                        {theme.name}
+                        {activeTheme.id === theme.id && <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />}
+                      </span>
+                      <span className="text-[10px] text-slate-500 mt-0.5 leading-snug">
+                        {theme.description}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+
+          {/* Zoom Feature (+ / -) - Moved lower as requested */}
+          <div className="mt-auto flex flex-col gap-2.5">
+            <button
+              onClick={() => setZoomTrigger(1)}
+              title="Zoom In"
+              className="flex items-center justify-center w-11 h-11 bg-white text-slate-700 rounded-2xl glossy-3d-container shadow-lg border border-slate-200/80 transition-all duration-200"
+            >
+              <Plus className="w-5 h-5 icon-shadow-3d" />
+            </button>
+            <button
+              onClick={() => setZoomTrigger(-1)}
+              title="Zoom Out"
+              className="flex items-center justify-center w-11 h-11 bg-white text-slate-700 rounded-2xl glossy-3d-container shadow-lg border border-slate-200/80 transition-all duration-200"
+            >
+              <Minus className="w-5 h-5 icon-shadow-3d" />
+            </button>
+
+            {/* Create Business Profile Small Icon - Only appears in the businesses icon feature */}
+            {activeBottomTab === 'businesses' && (
+              <button
+                onClick={() => {
+                  playReviewChime();
+                  setShowCreateBusinessModal(true);
+                }}
+                title="Create Business Profile"
+                className="group relative flex items-center justify-center w-11 h-11 bg-gradient-to-br from-amber-500 via-amber-600 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-2xl shadow-xl shadow-amber-500/35 border-2 border-white transition-all duration-200 active:scale-90 hover:scale-105 animate-in fade-in zoom-in-75 duration-200"
+              >
+                <Building2 className="w-5 h-5 drop-shadow-sm transition-transform group-hover:scale-110" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-slate-900 border-2 border-white rounded-full flex items-center justify-center text-[9px] font-black text-amber-300 shadow">
+                  +
+                </span>
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Zoom Feature (+ / -) directly under Map Theme Styles */}
-        <div className="flex flex-col gap-2.5">
-          <button
-            onClick={() => setZoomTrigger(1)}
-            title="Zoom In"
-            className="flex items-center justify-center w-11 h-11 bg-white text-slate-700 rounded-2xl glossy-3d-container shadow-lg border border-slate-200/80 transition-all duration-200 active:scale-90"
-          >
-            <Plus className="w-5 h-5 icon-shadow-3d" />
-          </button>
-          <button
-            onClick={() => setZoomTrigger(-1)}
-            title="Zoom Out"
-            className="flex items-center justify-center w-11 h-11 bg-white text-slate-700 rounded-2xl glossy-3d-container shadow-lg border border-slate-200/80 transition-all duration-200 active:scale-90"
-          >
-            <Minus className="w-5 h-5 icon-shadow-3d" />
-          </button>
-        </div>
-      </div>
-
-      {/* 5. Bottom Sliding Feature Menu Bar (White background, non-floating, label under icon) */}
-      <div className="fixed bottom-0 left-0 right-0 z-[1100] w-full bg-white border-t border-slate-200/90 shadow-2xl px-2 py-2 flex flex-col items-center pointer-events-auto">
+      {/* 5. Bottom Sliding Feature Menu Bar (Cyber Dock Aesthetic - Full Width) */}
+      <div className="fixed bottom-0 left-0 right-0 z-[1100] w-full flex flex-col items-center pointer-events-auto">
         
-        {/* Seekers Feature Drawer with Full Screen Experience */}
+        {/* Feature Drawers (Appear above the dock) */}
+        <div className="w-full flex justify-center px-2">
         {activeBottomTab === 'seekers' && (
           <div className="mb-2 bg-white p-3 md:p-4 rounded-3xl shadow-2xl border border-slate-200/90 w-[96vw] max-w-4xl text-center animate-in slide-in-from-bottom-2 fade-in duration-200 ring-1 ring-slate-900/5">
             <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
@@ -6078,7 +7373,7 @@ export default function App() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 h-full max-h-[65vh] overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 h-[450px] md:h-[550px] overflow-hidden">
               {/* Left Column: My Status & Broadcast */}
               <div className="md:col-span-4 space-y-3">
                 {/* Seeker Profile Card Header */}
@@ -6325,114 +7620,174 @@ export default function App() {
         )}
 
         {activeBottomTab === 'tenant' && (
-          <div className="mb-2 bg-white p-3 rounded-2xl shadow-2xl border border-slate-200/90 max-w-fit inline-flex flex-col items-center gap-2 animate-in slide-in-from-bottom-2 fade-in duration-200">
-            <div className="w-full flex items-center justify-between gap-6 pb-1 border-b border-slate-100">
-              <span className="text-[10px] font-extrabold uppercase text-emerald-700 tracking-wider flex items-center gap-1">
-                <Home className="w-3 h-3 text-emerald-600" />
+          <div className="mb-2 bg-white p-3 rounded-2xl shadow-2xl border border-slate-200/90 w-[96vw] max-w-md flex flex-col items-center gap-2 animate-in slide-in-from-bottom-2 fade-in duration-200 ring-1 ring-slate-900/5">
+            <div className="w-full flex items-center justify-between pb-1 border-b border-slate-100 px-1">
+              <span className="text-[11px] font-black uppercase text-emerald-700 tracking-wider flex items-center gap-1.5">
+                <Home className="w-3.5 h-3.5 text-emerald-600" />
                 Tenant Features
               </span>
               <button 
+                type="button"
                 onClick={() => setActiveBottomTab(null)} 
-                className="text-slate-400 hover:text-slate-600 p-0.5 rounded-full hover:bg-slate-100 transition-colors"
-                title="Close"
+                className="text-slate-400 hover:text-slate-700 p-1 rounded-full hover:bg-slate-100 transition-colors active:scale-90"
+                title="Close Tenant Features"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
             
-            {/* Phone Menu Style Feature Icons */}
-            <div className="flex items-center gap-4 px-2 py-1">
-              {/* Verification Feature Icon */}
+            {/* Sliding Feature Icons Bar with Left/Right Navigation */}
+            <div className="w-full flex items-center gap-1">
+              {/* Slide Left Button */}
               <button
-                onClick={() => setInspectingApplicant(true)}
-                className="relative flex flex-col items-center gap-1 group active:scale-95 transition-transform"
-                title="Open Tenant Verification Inspector"
-              >
-                {pendingVerificationCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-white font-black rounded-full text-[9px] flex items-center justify-center shadow-md animate-pulse z-10">
-                    {pendingVerificationCount}
-                  </span>
-                )}
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-800 text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all">
-                  <ShieldCheck className="w-5 h-5 icon-shadow-3d" />
-                </div>
-                <span className="text-[10px] font-bold text-slate-800">Verification</span>
-              </button>
-
-              {/* UserPoP Feature Icon (Changed from TenantPoP) */}
-              <button
-                onClick={() => setInspectingPopPayment(true)}
-                className="relative flex flex-col items-center gap-1 group active:scale-95 transition-transform"
-                title="Open UserPoP Inspector (Proof of Payment)"
-              >
-                {pendingPopCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-white font-black rounded-full text-[9px] flex items-center justify-center shadow-md animate-pulse z-10">
-                    {pendingPopCount}
-                  </span>
-                )}
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-emerald-700 text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all">
-                  <Receipt className="w-5 h-5 icon-shadow-3d" />
-                </div>
-                <span className="text-[10px] font-bold text-slate-800">UserPoP</span>
-              </button>
-
-              {/* Overview Feature Icon */}
-              <button
-                onClick={() => setShowTenantOverviewModal(true)}
-                className="flex flex-col items-center gap-1 group active:scale-95 transition-transform"
-                title="Open Tenant Overview & Subscription Profit"
-              >
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-800 text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all">
-                  <BarChart3 className="w-5 h-5 icon-shadow-3d" />
-                </div>
-                <span className="text-[10px] font-bold text-slate-800">Overview</span>
-              </button>
-
-              {/* Subfee Feature Icon */}
-              <button
+                type="button"
                 onClick={() => {
-                  setEditTenantFeeRands(tenantBankDetails.tenantMonthlyFeeRands || 299.99);
-                  setEditTenantFeeUsd(tenantBankDetails.tenantMonthlyFeeUsd || 16.50);
-                  setEditUserFeeRands(tenantBankDetails.userMonthlyFeeRands || tenantBankDetails.monthlyFeeRands || 180);
-                  setEditUserFeeUsd(tenantBankDetails.userMonthlyFeeUsd || tenantBankDetails.monthlyFeeUsd || 9.99);
-                  setEditBankName(tenantBankDetails.bankName);
-                  setEditAccountName(tenantBankDetails.accountName);
-                  setEditAccountNumber(tenantBankDetails.accountNumber);
-                  setEditSwiftCode(tenantBankDetails.swiftCode);
-                  setEditRefPrefix(tenantBankDetails.referencePrefix);
-                  setShowTenantSubfeeModal(true);
+                  if (tenantMenuScrollRef.current) {
+                    tenantMenuScrollRef.current.scrollBy({ left: -140, behavior: 'smooth' });
+                  }
                 }}
-                className="flex flex-col items-center gap-1 group active:scale-95 transition-transform"
-                title="Configure Subscription Fee & Banking Info"
+                className="p-1.5 text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 active:scale-90 rounded-xl transition-all shrink-0 shadow-sm border border-slate-200/60"
+                title="Slide Left"
               >
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-800 text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all">
-                  <CreditCard className="w-5 h-5 icon-shadow-3d" />
-                </div>
-                <span className="text-[10px] font-bold text-slate-800">Subfee</span>
+                <ChevronLeft className="w-4 h-4" />
               </button>
 
-              {/* Team Invite Feature Icon */}
-              <button
-                onClick={() => setShowTeamInviteModal(true)}
-                className="flex flex-col items-center gap-1 group active:scale-95 transition-transform"
-                title="Invite Users to Your Team"
+              {/* Horizontally Scrollable / Sliding Feature Track */}
+              <div 
+                ref={tenantMenuScrollRef}
+                className="flex items-center gap-4 overflow-x-auto scroll-smooth no-scrollbar py-1 px-1 flex-1"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-700 text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all">
-                  <Plus className="w-5 h-5 icon-shadow-3d" />
-                </div>
-                <span className="text-[10px] font-bold text-slate-800">Invite Team</span>
-              </button>
+                {/* Verification Feature Icon */}
+                <button
+                  type="button"
+                  onClick={() => setInspectingApplicant(true)}
+                  className="relative flex flex-col items-center gap-1 group active:scale-95 transition-transform shrink-0"
+                  title="Open Tenant Verification Inspector"
+                >
+                  {pendingVerificationCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-white font-black rounded-full text-[9px] flex items-center justify-center shadow-md animate-pulse z-10">
+                      {pendingVerificationCount}
+                    </span>
+                  )}
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-800 text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all">
+                    <ShieldCheck className="w-5 h-5 icon-shadow-3d" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">Verification</span>
+                </button>
 
-              {/* Activation Feature Icon */}
+                {/* UserPoP Feature Icon (Changed from TenantPoP) */}
+                <button
+                  type="button"
+                  onClick={() => setInspectingPopPayment(true)}
+                  className="relative flex flex-col items-center gap-1 group active:scale-95 transition-transform shrink-0"
+                  title="Open UserPoP Inspector (Proof of Payment)"
+                >
+                  {pendingPopCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-white font-black rounded-full text-[9px] flex items-center justify-center shadow-md animate-pulse z-10">
+                      {pendingPopCount}
+                    </span>
+                  )}
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-emerald-700 text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all">
+                    <Receipt className="w-5 h-5 icon-shadow-3d" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">UserPoP</span>
+                </button>
+
+                {/* Overview Feature Icon */}
+                <button
+                  type="button"
+                  onClick={() => setShowTenantOverviewModal(true)}
+                  className="flex flex-col items-center gap-1 group active:scale-95 transition-transform shrink-0"
+                  title="Open Tenant Overview & Subscription Profit"
+                >
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-800 text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all">
+                    <BarChart3 className="w-5 h-5 icon-shadow-3d" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">Overview</span>
+                </button>
+
+                {/* Subfee Feature Icon */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditTenantFeeRands(tenantBankDetails.tenantMonthlyFeeRands || 299.99);
+                    setEditTenantFeeUsd(tenantBankDetails.tenantMonthlyFeeUsd || 16.50);
+                    setEditUserFeeRands(tenantBankDetails.userMonthlyFeeRands || tenantBankDetails.monthlyFeeRands || 180);
+                    setEditUserFeeUsd(tenantBankDetails.userMonthlyFeeUsd || tenantBankDetails.monthlyFeeUsd || 9.99);
+                    setEditBankName(tenantBankDetails.bankName);
+                    setEditAccountName(tenantBankDetails.accountName);
+                    setEditAccountNumber(tenantBankDetails.accountNumber);
+                    setEditSwiftCode(tenantBankDetails.swiftCode);
+                    setEditRefPrefix(tenantBankDetails.referencePrefix);
+                    setShowTenantSubfeeModal(true);
+                  }}
+                  className="flex flex-col items-center gap-1 group active:scale-95 transition-transform shrink-0"
+                  title="Configure Subscription Fee & Banking Info"
+                >
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-800 text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all">
+                    <CreditCard className="w-5 h-5 icon-shadow-3d" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">Subfee</span>
+                </button>
+
+                {/* Team Invite Feature Icon */}
+                <button
+                  type="button"
+                  onClick={() => setShowTeamInviteModal(true)}
+                  className="flex flex-col items-center gap-1 group active:scale-95 transition-transform shrink-0"
+                  title="Invite Users to Your Team"
+                >
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-700 text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all">
+                    <Plus className="w-5 h-5 icon-shadow-3d" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">Invite Team</span>
+                </button>
+
+                {/* Activation Feature Icon */}
+                <button
+                  type="button"
+                  onClick={() => setShowTenantActivationModal(true)}
+                  className="flex flex-col items-center gap-1 group active:scale-95 transition-transform shrink-0"
+                  title="Pay R299.99 Monthly Tenant Activation Fee"
+                >
+                  <div className={`w-11 h-11 rounded-2xl ${tenantIsActive ? 'bg-gradient-to-br from-emerald-500 to-emerald-800 shadow-emerald-500/20' : 'bg-gradient-to-br from-amber-400 to-amber-700 shadow-amber-500/20 animate-bounce'} text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all`}>
+                    <Zap className="w-5 h-5 icon-shadow-3d" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">Activation</span>
+                </button>
+
+                {/* Add Business / Tenant Business Inspection Icon */}
+                <button
+                  type="button"
+                  onClick={() => setShowBusinessSubmissionsModal(true)}
+                  className="relative flex flex-col items-center gap-1 group active:scale-95 transition-transform shrink-0"
+                  title="View & Inspect Submitted Business Applications"
+                >
+                  {businessSubmissions.filter(b => b.status === 'pending').length > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-white font-black rounded-full text-[9px] flex items-center justify-center shadow-md animate-pulse z-10">
+                      {businessSubmissions.filter(b => b.status === 'pending').length}
+                    </span>
+                  )}
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-stone-600 to-slate-900 text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all">
+                    <Building2 className="w-5 h-5 icon-shadow-3d" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">Business</span>
+                </button>
+              </div>
+
+              {/* Slide Right Button */}
               <button
-                onClick={() => setShowTenantActivationModal(true)}
-                className="flex flex-col items-center gap-1 group active:scale-95 transition-transform"
-                title="Pay R299.99 Monthly Tenant Activation Fee"
+                type="button"
+                onClick={() => {
+                  if (tenantMenuScrollRef.current) {
+                    tenantMenuScrollRef.current.scrollBy({ left: 140, behavior: 'smooth' });
+                  }
+                }}
+                className="p-1.5 text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 active:scale-90 rounded-xl transition-all shrink-0 shadow-sm border border-slate-200/60"
+                title="Slide Right"
               >
-                <div className={`w-11 h-11 rounded-2xl ${tenantIsActive ? 'bg-gradient-to-br from-emerald-500 to-emerald-800 shadow-emerald-500/20' : 'bg-gradient-to-br from-amber-400 to-amber-700 shadow-amber-500/20 animate-bounce'} text-white glossy-3d-container group-hover:shadow-lg group-hover:scale-105 transition-all`}>
-                  <Zap className="w-5 h-5 icon-shadow-3d" />
-                </div>
-                <span className="text-[10px] font-bold text-slate-800">Activation</span>
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
 
@@ -6842,122 +8197,120 @@ export default function App() {
           </div>
         )}
 
-        {/* Sliding Menu Navigation Bar */}
+        </div>
+
+        {/* The Navigation Bar - Clean 2D Flat Theme */}
         {(activeBottomTab as any) !== 'settings' && (
-          <div className="w-full max-w-md flex items-center">
+          <div className="w-full bg-white/95 backdrop-blur-xl border-t border-slate-200 p-2.5 shadow-[0_-8px_30px_rgba(0,0,0,0.05)] flex items-center gap-2 animate-in slide-in-from-bottom-4 duration-400">
             
             {/* Scroll Left Button */}
             <button
               onClick={() => {
                 if (menuScrollRef.current) menuScrollRef.current.scrollBy({ left: -100, behavior: 'smooth' });
               }}
-              className="p-1.5 text-slate-400 hover:text-slate-700 transition-colors shrink-0"
+              className="p-2 text-slate-400 hover:text-slate-600 transition-colors shrink-0"
               title="Slide Left"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-5 h-5" />
             </button>
 
             {/* Horizontally Scrollable / Sliding Feature Track */}
             <div 
               ref={menuScrollRef}
-              className="flex items-center gap-2 overflow-x-auto scroll-smooth no-scrollbar px-1 py-0.5 w-full justify-around"
+              className="flex items-center gap-4 overflow-x-auto scroll-smooth no-scrollbar px-1 py-0.5 w-full justify-around"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {/* Seekers Feature */}
               <button
                 onClick={() => setActiveBottomTab(activeBottomTab === 'seekers' ? null : 'seekers')}
-                className={`flex flex-col items-center justify-center gap-1.5 p-1.5 rounded-2xl transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group ${
-                  activeBottomTab === 'seekers'
-                    ? 'bg-purple-50 text-purple-700 ring-2 ring-purple-500/30'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                className="flex flex-col items-center justify-center gap-1 transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group"
               >
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-700 text-white glossy-3d-container group-hover:scale-105 transition-all flex items-center justify-center">
-                  <FlatIcon icon={User} className="w-12 h-12" />
+                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 ${
+                  activeBottomTab === 'seekers' 
+                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-100 scale-110 -translate-y-1' 
+                    : 'bg-slate-100 text-slate-500 group-hover:bg-purple-50 group-hover:text-purple-600'
+                }`}>
+                  <Users className="w-6 h-6" />
                 </div>
-                <span className="text-xs leading-none font-bold text-slate-800">Seekers</span>
+                <span className={`text-[10px] font-bold transition-colors ${activeBottomTab === 'seekers' ? 'text-purple-600' : 'text-slate-500'}`}>Seekers</span>
               </button>
 
               {/* GiGs Feature */}
               <button
                 onClick={() => setActiveBottomTab(activeBottomTab === 'gigs' ? null : 'gigs')}
-                className={`relative flex flex-col items-center justify-center gap-1.5 p-1.5 rounded-2xl transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group ${
-                  activeBottomTab === 'gigs'
-                    ? 'bg-amber-50 text-amber-800 ring-2 ring-amber-500/30'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                className="relative flex flex-col items-center justify-center gap-1 transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group"
               >
-                <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-700 text-white glossy-3d-container group-hover:scale-105 transition-all flex items-center justify-center">
-                  <FlatIcon icon={Briefcase} className="w-12 h-12" />
-                  {/* Create a GiG Quick Action Badge */}
+                <div className="relative">
+                  <div className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 ${
+                    activeBottomTab === 'gigs' 
+                      ? 'bg-amber-500 text-white shadow-lg shadow-amber-100 scale-110 -translate-y-1' 
+                      : 'bg-slate-100 text-slate-500 group-hover:bg-amber-50 group-hover:text-amber-600'
+                  }`}>
+                    <Briefcase className="w-6 h-6" />
+                  </div>
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
                       setActiveBottomTab('gigs');
                       openCreateGigModal();
                     }}
-                    className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-gradient-to-br from-orange-400 to-amber-600 text-white rounded-full glossy-3d-container shadow-md border-2 border-white transition-transform hover:scale-110 active:scale-95 flex items-center justify-center"
+                    className="absolute -top-1 -right-1 w-4 h-4 bg-slate-900 text-white rounded-full border border-white shadow-sm flex items-center justify-center text-[9px] font-black z-20"
                     title="Create a GiG"
                   >
-                    <FlatIcon icon={Plus} className="w-7 h-7" />
+                    +
                   </div>
                 </div>
-                <span className="text-xs leading-none font-bold text-slate-800">GiGs</span>
+                <span className={`text-[10px] font-bold transition-colors ${activeBottomTab === 'gigs' ? 'text-amber-600' : 'text-slate-500'}`}>GiGs</span>
               </button>
 
               {/* Tenant Feature */}
               <button
                 onClick={() => setActiveBottomTab(activeBottomTab === 'tenant' ? null : 'tenant')}
-                className={`relative flex flex-col items-center justify-center gap-1.5 p-1.5 rounded-2xl transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group ${
-                  activeBottomTab === 'tenant'
-                    ? 'bg-emerald-50 text-emerald-800 ring-2 ring-emerald-500/30'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                className="relative flex flex-col items-center justify-center gap-1 transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group"
               >
                 {(pendingVerificationCount + pendingPopCount) > 0 && (
-                  <span className="absolute top-1 right-2 w-5 h-5 bg-red-600 text-white font-black rounded-full text-[10px] flex items-center justify-center shadow-md animate-pulse z-10">
+                  <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 bg-rose-600 text-white font-black rounded-full text-[8px] flex items-center justify-center shadow-sm z-30 ring-1 ring-white">
                     {pendingVerificationCount + pendingPopCount}
                   </span>
                 )}
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-800 text-white glossy-3d-container group-hover:scale-105 transition-all flex items-center justify-center">
-                  <FlatIcon icon={FileText} className="w-12 h-12" />
+                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 ${
+                  activeBottomTab === 'tenant' 
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-100 scale-110 -translate-y-1' 
+                    : 'bg-slate-100 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600'
+                }`}>
+                  <FileText className="w-6 h-6" />
                 </div>
-                <span className="text-xs leading-none font-bold text-slate-800">Tenant</span>
+                <span className={`text-[10px] font-bold transition-colors ${activeBottomTab === 'tenant' ? 'text-blue-600' : 'text-slate-500'}`}>Tenant</span>
               </button>
 
               {/* Businesses Feature */}
               <button
-                onClick={() => setActiveBottomTab(activeBottomTab === 'businesses' ? null : 'businesses')}
-                className={`flex flex-col items-center justify-center gap-1.5 p-1.5 rounded-2xl transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group ${
-                  activeBottomTab === 'businesses'
-                    ? 'bg-blue-50 text-blue-700 ring-2 ring-blue-500/30'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                onClick={handleBusinessesTabClick}
+                className="flex flex-col items-center justify-center gap-1 transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group"
               >
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-700 text-white glossy-3d-container group-hover:scale-105 transition-all flex items-center justify-center">
-                  <FlatIcon icon={Building2} className="w-12 h-12" />
+                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 ${
+                  activeBottomTab === 'businesses' 
+                    ? 'bg-stone-600 text-white shadow-lg shadow-stone-100 scale-110 -translate-y-1' 
+                    : 'bg-slate-100 text-slate-500 group-hover:bg-stone-100 group-hover:text-stone-700'
+                }`}>
+                  <Building2 className="w-6 h-6" />
                 </div>
-                <span className="text-xs leading-none font-bold text-slate-800">Businesses</span>
+                <span className={`text-[10px] font-bold transition-colors ${activeBottomTab === 'businesses' ? 'text-stone-700' : 'text-slate-500'}`}>Businesses</span>
               </button>
 
               {/* Admin Feature */}
               <button
                 onClick={() => setActiveBottomTab(activeBottomTab === 'admin' ? null : 'admin')}
-                className={`relative flex flex-col items-center justify-center gap-1.5 p-1.5 rounded-2xl transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group ${
-                  activeBottomTab === 'admin'
-                    ? 'bg-blue-50 text-blue-800 ring-2 ring-blue-500/30'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                className="relative flex flex-col items-center justify-center gap-1 transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group"
               >
-                {(pendingVerificationCount + pendingPopCount) > 0 && (
-                  <span className="absolute top-1 right-2 w-5 h-5 bg-red-600 text-white font-black rounded-full text-[10px] flex items-center justify-center shadow-md animate-pulse z-10">
-                    {pendingVerificationCount + pendingPopCount}
-                  </span>
-                )}
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-800 text-white glossy-3d-container group-hover:scale-105 transition-all flex items-center justify-center">
-                  <FlatIcon icon={ShieldCheck} className="w-12 h-12" />
+                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 ${
+                  activeBottomTab === 'admin' 
+                    ? 'bg-sky-600 text-white shadow-lg shadow-sky-100 scale-110 -translate-y-1' 
+                    : 'bg-slate-100 text-slate-500 group-hover:bg-sky-50 group-hover:text-sky-600'
+                }`}>
+                  <ShieldCheck className="w-6 h-6" />
                 </div>
-                <span className="text-xs leading-none font-bold text-slate-800">Admin</span>
+                <span className={`text-[10px] font-bold transition-colors ${activeBottomTab === 'admin' ? 'text-sky-600' : 'text-slate-500'}`}>Admin</span>
               </button>
 
               {/* Profile Feature */}
@@ -6976,16 +8329,16 @@ export default function App() {
                   setEditSocialLinks(userProfile.socialLinks);
                   setShowProfileModal(true);
                 }}
-                className={`flex flex-col items-center justify-center gap-1.5 p-1.5 rounded-2xl transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group ${
-                  activeBottomTab === 'profile'
-                    ? 'bg-blue-50 text-blue-700 ring-2 ring-blue-500/30'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                className="flex flex-col items-center justify-center gap-1 transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group"
               >
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-400 to-cyan-700 text-white glossy-3d-container group-hover:scale-105 transition-all flex items-center justify-center">
-                  <FlatIcon icon={User} className="w-12 h-12" />
+                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 ${
+                  activeBottomTab === 'profile' 
+                    ? 'bg-slate-800 text-white shadow-lg shadow-slate-200 scale-110 -translate-y-1' 
+                    : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200 group-hover:text-slate-900'
+                }`}>
+                  <User className="w-6 h-6" />
                 </div>
-                <span className="text-xs leading-none font-bold text-slate-800">Profile</span>
+                <span className={`text-[10px] font-bold transition-colors ${activeBottomTab === 'profile' ? 'text-slate-900' : 'text-slate-500'}`}>Profile</span>
               </button>
 
               {/* Settings Feature */}
@@ -6993,16 +8346,16 @@ export default function App() {
                 onClick={() => {
                   setActiveBottomTab((activeBottomTab as any) === 'settings' ? null : 'settings');
                 }}
-                className={`flex flex-col items-center justify-center gap-1.5 p-1.5 rounded-2xl transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group ${
-                  (activeBottomTab as any) === 'settings'
-                    ? 'bg-slate-200 text-slate-900 ring-2 ring-slate-400/30'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                className="flex flex-col items-center justify-center gap-1 transition-all duration-200 shrink-0 whitespace-nowrap active:scale-95 group"
               >
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-600 to-slate-900 text-white glossy-3d-container group-hover:scale-105 transition-all flex items-center justify-center">
-                  <FlatIcon icon={Settings} className="w-12 h-12" />
+                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 ${
+                  (activeBottomTab as any) === 'settings' 
+                    ? 'bg-slate-600 text-white shadow-lg shadow-slate-200 scale-110 -translate-y-1' 
+                    : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200 group-hover:text-slate-700'
+                }`}>
+                  <Settings className="w-6 h-6" />
                 </div>
-                <span className="text-xs leading-none font-bold text-slate-800">Settings</span>
+                <span className={`text-[10px] font-bold transition-colors ${(activeBottomTab as any) === 'settings' ? 'text-slate-700' : 'text-slate-500'}`}>Settings</span>
               </button>
 
             </div>
@@ -7012,10 +8365,10 @@ export default function App() {
               onClick={() => {
                 if (menuScrollRef.current) menuScrollRef.current.scrollBy({ left: 100, behavior: 'smooth' });
               }}
-              className="p-1.5 text-slate-400 hover:text-slate-700 transition-colors shrink-0"
+              className="p-2 text-slate-400 hover:text-blue-600 transition-colors shrink-0"
               title="Slide Right"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-5 h-5" />
             </button>
 
           </div>
@@ -7070,7 +8423,7 @@ export default function App() {
               />
               <Marker 
                 position={userPos} 
-                icon={createLiveSeekerMarkerIcon(userProfile.avatarUrl, getFullName(userProfile), userProfile.verificationStatus === 'verified')}
+                icon={createLiveSeekerMarkerIcon(userProfile.avatarUrl, getFullName(userProfile), userProfile.verificationStatus === 'verified', currentZoom)}
               >
                 <Popup className="custom-profile-popup rounded-2xl overflow-hidden font-sans border-0 shadow-2xl p-0">
                   <div className="p-2.5 w-56 bg-white font-sans text-slate-800">
@@ -7150,7 +8503,7 @@ export default function App() {
               )}
               <Marker 
                 position={userPos} 
-                icon={createUserProfileMarkerIcon(userProfile.avatarUrl, getFullName(userProfile), userProfile.verificationStatus === 'verified')}
+                icon={createUserProfileMarkerIcon(userProfile.avatarUrl, getFullName(userProfile), userProfile.verificationStatus === 'verified', currentZoom)}
               >
                 <Popup className="custom-profile-popup rounded-2xl overflow-hidden font-sans border-0 shadow-2xl p-0">
                   <div className="p-4 w-64 bg-white/95 backdrop-blur-md font-sans text-slate-800">
@@ -7187,7 +8540,7 @@ export default function App() {
 
           {/* Clicked / Searched Pinned Location */}
           {exactLocationPinnedEnabled && clickedPos && isValidCoordinate(clickedPos[0], clickedPos[1]) && (
-            <Marker position={clickedPos} icon={customPinIcon}>
+            <Marker position={clickedPos} icon={createCustomPinIcon(currentZoom)}>
               <Popup className="custom-popup rounded-2xl overflow-hidden font-sans">
                 <div className="p-2 min-w-[210px] max-w-[260px]">
                   <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-slate-100">
@@ -7245,7 +8598,7 @@ export default function App() {
           {activeGigSession && (activeGigSession.status === 'guiding' || activeGigSession.status === 'arrived') && (
             <Marker
               position={activeGigSession.seekerCurrentPos}
-              icon={createMovingSeekerMarkerIcon(activeGigSession.seekerAvatar, activeGigSession.seekerName, activeGigSession.seekerTrade)}
+              icon={createMovingSeekerMarkerIcon(activeGigSession.seekerAvatar, activeGigSession.seekerName, activeGigSession.seekerTrade, currentZoom)}
             >
               <Popup className="custom-popup rounded-2xl overflow-hidden font-sans">
                 <div className="p-2 min-w-[190px]">
@@ -7267,7 +8620,7 @@ export default function App() {
             <Marker
               key={item.id}
               position={[item.lat, item.lng]}
-              icon={createSeekerMarkerIcon(item.name, item.role)}
+              icon={createSeekerMarkerIcon(item.name, item.role, currentZoom)}
             >
               <Popup className="custom-popup rounded-2xl overflow-hidden font-sans">
                 <div className="p-2 min-w-[190px]">
@@ -7300,7 +8653,7 @@ export default function App() {
             <Marker
               key={item.id}
               position={[item.lat, item.lng]}
-              icon={createGigMarkerIcon(item.rate || item.pay || 'R 350/hr', item.title)}
+              icon={createGigMarkerIcon(item.rate || item.pay || 'R 350/hr', item.title, currentZoom)}
             >
               <Popup className="custom-popup rounded-2xl overflow-hidden font-sans">
                 <div className="p-2 min-w-[200px] max-w-[240px]">
@@ -7345,19 +8698,73 @@ export default function App() {
             </Marker>
           ))}
 
-          {/* Business Map Markers */}
+          {/* Business Map Markers - Visible when Businesses tab is active */}
           {activeBottomTab === 'businesses' && businessesListings.map((item) => (
             <Marker
               key={item.id}
               position={[item.lat, item.lng]}
-              icon={createTenantMarkerIcon(item.rating)}
+              icon={createBusinessMarkerIcon(item.name, item.avatar, item.category, item.service, currentZoom)}
+              eventHandlers={{
+                click: () => {
+                  handleBusinessMarkerClick(item);
+                }
+              }}
             >
               <Popup className="custom-popup rounded-2xl overflow-hidden font-sans">
-                <div className="p-2 min-w-[180px]">
-                  <h4 className="text-xs font-bold text-slate-900">{item.name}</h4>
-                  <p className="text-[10px] text-slate-500 font-medium mt-0.5">{item.category}</p>
-                  <div className="mt-2 text-xs font-black text-slate-900 border-t pt-1.5">
-                    <span>⭐ {item.rating} ({item.reviews} reviews)</span>
+                <div className="p-2.5 min-w-[210px]">
+                  <div className="flex items-center gap-2.5 mb-2">
+                    <img
+                      src={item.avatar}
+                      alt={item.name}
+                      className="w-12 h-12 rounded-2xl object-cover border-2 border-white shadow-md shrink-0"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-xs font-black text-slate-900 truncate leading-snug">{item.name}</h4>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 inline-block">
+                          {item.category} • {item.service}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-1 text-xs font-black text-slate-900 border-t border-slate-100 pt-1.5 flex items-center justify-between">
+                    <span className="text-amber-600 font-extrabold">⭐ {item.rating}</span>
+                    <span className="text-[10px] text-slate-400 font-medium">{item.reviews} reviews</span>
+                  </div>
+                  {item.hours && (
+                    <div className="mt-1.5 flex items-center gap-1.5 text-[9px] font-bold text-slate-500 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
+                      <Clock className="w-3 h-3 text-blue-500" />
+                      <span className="truncate">{item.hours}</span>
+                    </div>
+                  )}
+                  <div className="flex gap-1.5 mt-2">
+                    <button
+                      onClick={() => {
+                        handleBusinessMarkerClick(item);
+                      }}
+                      className="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-black rounded-xl transition-all flex items-center justify-center gap-1 shadow-md active:scale-95"
+                    >
+                      <Building2 className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Profile</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        directToBusiness(item);
+                      }}
+                      className="flex-1 py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-[11px] font-black rounded-xl transition-all flex items-center justify-center gap-1 shadow-md active:scale-95"
+                    >
+                      <Navigation className="w-3.5 h-3.5" />
+                      <span>Direct Me</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShareBusinessModal(item);
+                      }}
+                      className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all flex items-center justify-center shadow-sm active:scale-95"
+                      title="Share exact business location"
+                    >
+                      <Share2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               </Popup>
@@ -7369,7 +8776,7 @@ export default function App() {
             <Marker
               key={item.id}
               position={[item.lat, item.lng]}
-              icon={createTenantMarkerIcon(item.price)}
+              icon={createTenantMarkerIcon(item.price, currentZoom)}
             >
               <Popup className="custom-popup rounded-2xl overflow-hidden font-sans">
                 <div className="p-2 min-w-[180px]">
@@ -7395,9 +8802,953 @@ export default function App() {
             setAutoCenter={setAutoCenter}
             zoomTrigger={zoomTrigger}
             setZoomTrigger={setZoomTrigger}
+            onZoomChange={setCurrentZoom}
+            fitBoundsPoints={fitBoundsPoints}
+            setFitBoundsPoints={setFitBoundsPoints}
           />
         </MapContainer>
       </div>
+
+      {/* Nearby Restaurants List Modal */}
+      {showRestaurantListModal && (
+        <div className="fixed inset-0 z-[2000] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 animate-in zoom-in-95 duration-200 border border-slate-100">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center">
+                  <Star className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-black text-slate-900 text-base">Nearby Restaurants</h3>
+                  <p className="text-xs text-slate-500">Choose a restaurant to explore & get guidance</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => { setShowRestaurantListModal(false); setShowBusinessFilter(false); }}
+                className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto pr-1">
+              {[
+                { name: 'The Gourmet Kitchen', rating: '4.8 ★', distance: '0.3 km', cuisine: 'Fine Dining & Grill', lat: -26.2041, lng: 28.0473 },
+                { name: 'Bella Napoli Trattoria', rating: '4.9 ★', distance: '0.6 km', cuisine: 'Authentic Italian & Pizza', lat: -26.2065, lng: 28.0512 },
+                { name: 'Sakura Sushi & Ramen', rating: '4.7 ★', distance: '0.9 km', cuisine: 'Japanese & Asian Fusion', lat: -26.2010, lng: 28.0420 },
+                { name: 'Urban Coffee & Bistro', rating: '4.6 ★', distance: '1.2 km', cuisine: 'Brunch, Coffee & Pastries', lat: -26.2080, lng: 28.0390 }
+              ].map(resto => (
+                <div 
+                  key={resto.name}
+                  onClick={() => {
+                    setSelectedRestaurant(resto);
+                    setShowRestaurantListModal(false);
+                  }}
+                  className="p-4 rounded-2xl border border-slate-200/80 hover:border-amber-500 hover:bg-amber-50/30 transition-all cursor-pointer flex items-center justify-between group shadow-sm"
+                >
+                  <div className="flex flex-col gap-1">
+                    <span className="font-black text-slate-900 group-hover:text-amber-600 transition-colors">{resto.name}</span>
+                    <span className="text-xs text-slate-500">{resto.cuisine}</span>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">{resto.rating}</span>
+                      <span className="text-[11px] text-slate-400">{resto.distance} away</span>
+                    </div>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-amber-600 group-hover:text-white text-slate-600 flex items-center justify-center transition-colors">
+                    <ChevronRight className="w-5 h-5" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Restaurant Guidance or Skip Modal */}
+      {selectedRestaurant && (
+        <div className="fixed inset-0 z-[2000] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 animate-in zoom-in-95 duration-200 text-center border border-slate-100">
+            <div className="w-16 h-16 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-4 shadow-sm">
+              <Compass className="w-8 h-8 animate-pulse" />
+            </div>
+            <h3 className="font-black text-slate-900 text-lg mb-1">{selectedRestaurant.name}</h3>
+            <p className="text-xs text-slate-500 mb-6">{selectedRestaurant.cuisine} • {selectedRestaurant.distance}</p>
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => {
+                  setIsRestaurantGuiding(true);
+                  setActiveGigSession({
+                    seekerId: selectedRestaurant.name,
+                    seekerName: selectedRestaurant.name,
+                    seekerAvatar: selectedRestaurant.avatar || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=150&auto=format&fit=crop&q=80',
+                    seekerTrade: selectedRestaurant.cuisine || 'Restaurant',
+                    seekerRate: 'R 0.00',
+                    seekerContact: '+1 (555) 019-2834',
+                    seekerPhone: '+1 (555) 019-2834',
+                    service: selectedRestaurant.cuisine,
+                    seekerOrigin: [selectedRestaurant.lat, selectedRestaurant.lng],
+                    seekerCurrentPos: [selectedRestaurant.lat, selectedRestaurant.lng],
+                    userTargetPos: [selectedRestaurant.lat, selectedRestaurant.lng],
+                    userDest: [selectedRestaurant.lat, selectedRestaurant.lng],
+                    status: 'guiding',
+                    countdown: 60,
+                    route: userPos ? [userPos, [selectedRestaurant.lat, selectedRestaurant.lng]] : [[selectedRestaurant.lat, selectedRestaurant.lng]],
+                    routeIndex: 0,
+                    distance: selectedRestaurant.distance || '1.2 km',
+                    eta: '4 mins',
+                    startTime: Date.now(),
+                    elapsedSeconds: 0,
+                    rating: 4.9
+                  });
+                  setSelectedRestaurant(null);
+                  setShowBusinessFilter(false);
+                }}
+                className="w-full py-3.5 bg-amber-600 hover:bg-amber-700 text-white rounded-2xl font-bold shadow-lg shadow-amber-600/25 transition-all flex items-center justify-center gap-2"
+              >
+                <Compass className="w-5 h-5" />
+                Let App Guide You
+              </button>
+              <button
+                onClick={() => {
+                  setIsRestaurantGuiding(false);
+                  setSelectedRestaurant(null);
+                  setShowBusinessFilter(false);
+                }}
+                className="w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold transition-all"
+              >
+                Skip & View on Map
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Selected Business Full Profile Modal */}
+      {selectedBusinessProfile && (
+        <div className="fixed inset-0 z-[2000] bg-slate-950/70 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-lg w-full max-h-[92vh] overflow-y-auto animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-200 border border-slate-100 flex flex-col relative text-slate-900">
+            {/* Cover Banner */}
+            <div className={`relative h-32 w-full ${getBusinessSymbolConfig(selectedBusinessProfile.name, selectedBusinessProfile.category, selectedBusinessProfile.service).bgColor} p-4 flex items-start justify-between overflow-hidden shrink-0`}>
+              <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+              
+              {/* Category / Trade Pill */}
+              <div className="relative z-10 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-sm">
+                <span dangerouslySetInnerHTML={{ __html: getBusinessSymbolConfig(selectedBusinessProfile.name, selectedBusinessProfile.category, selectedBusinessProfile.service).svg }}></span>
+                <span>{selectedBusinessProfile.category} • {selectedBusinessProfile.service}</span>
+              </div>
+
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedBusinessProfile(null)}
+                className="relative z-10 w-9 h-9 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition-all backdrop-blur-md"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Profile Logo & Header Info */}
+            <div className="px-6 pb-6 pt-0 relative flex flex-col">
+              {/* Profile Logo Attached */}
+              <div className="flex items-end justify-between -mt-12 mb-3">
+                <div className="relative">
+                  <img
+                    src={selectedBusinessProfile.avatar}
+                    alt={selectedBusinessProfile.name}
+                    className="w-24 h-24 rounded-3xl object-cover border-4 border-white shadow-2xl bg-white shrink-0 ring-1 ring-slate-900/10"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-white shadow-md" title="Verified Business">
+                    <CheckCircle2 className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setShareBusinessModal(selectedBusinessProfile);
+                    }}
+                    className="w-10 h-10 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-all"
+                    title="Share Location"
+                  >
+                    <Share2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      directToBusiness(selectedBusinessProfile);
+                    }}
+                    className="px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/25 transition-all"
+                  >
+                    <Navigation className="w-4 h-4" />
+                    <span>Get Directions</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Title & Badges */}
+              <div className="flex flex-col gap-1 mb-4">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-xl font-black text-slate-900 leading-tight">
+                    {selectedBusinessProfile.name}
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/80 font-bold text-[10px] uppercase tracking-wider flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                    Verified Business
+                  </span>
+                </div>
+
+                {/* Rating, Distance & Status */}
+                <div className="flex items-center gap-3 text-xs text-slate-600 mt-1 flex-wrap">
+                  <div className="flex items-center gap-1 font-black text-slate-900">
+                    <span className="text-amber-500">★</span>
+                    <span>{selectedBusinessProfile.rating}</span>
+                    <span className="text-slate-400 font-medium">({selectedBusinessProfile.reviews} reviews)</span>
+                  </div>
+                  <span className="text-slate-300">•</span>
+                  <div className="flex items-center gap-1 text-slate-600 font-semibold">
+                    <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                    <span>{calculateDistanceText(selectedBusinessProfile.lat, selectedBusinessProfile.lng)}</span>
+                  </div>
+                  <span className="text-slate-300">•</span>
+                  <div className="flex items-center gap-1 text-emerald-600 font-bold">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Open Now</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Full Details Cards */}
+              <div className="space-y-3">
+                {/* Description */}
+                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-1">About Company</h4>
+                  <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                    {selectedBusinessProfile.description || 'Certified and fully registered commercial enterprise providing verified top-tier services and customer satisfaction.'}
+                  </p>
+                </div>
+
+                {/* Contact & Hours Info List */}
+                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 divide-y divide-slate-200/70 text-xs">
+                  {/* Address */}
+                  <div className="pb-2.5 flex items-start gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-white shadow-sm border border-slate-200 flex items-center justify-center shrink-0 text-slate-600">
+                      <MapPin className="w-4 h-4 text-rose-500" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase block">Exact Location & Coordinates</span>
+                      <p className="text-xs font-bold text-slate-800 leading-snug">{selectedBusinessProfile.address || 'Sandton City Center, Johannesburg, South Africa'}</p>
+                      <span className="text-[10px] font-mono text-slate-400">GPS: {selectedBusinessProfile.lat.toFixed(4)}, {selectedBusinessProfile.lng.toFixed(4)}</span>
+                    </div>
+                  </div>
+
+                  {/* Hours */}
+                  <div className="py-2.5 flex items-start gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-white shadow-sm border border-slate-200 flex items-center justify-center shrink-0 text-slate-600">
+                      <Clock className="w-4 h-4 text-blue-500" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase block">Operating Hours</span>
+                      <p className="text-xs font-bold text-slate-800">{selectedBusinessProfile.hours || 'Mon - Sat: 08:00 AM - 06:00 PM'}</p>
+                    </div>
+                  </div>
+
+                  {/* Phone */}
+                  <div className="py-2.5 flex items-center justify-between gap-2.5">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-xl bg-white shadow-sm border border-slate-200 flex items-center justify-center shrink-0 text-slate-600">
+                        <Phone className="w-4 h-4 text-emerald-600" />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase block">Phone / Contact</span>
+                        <p className="text-xs font-bold text-slate-800 truncate">{selectedBusinessProfile.contact || selectedBusinessProfile.phone || '+27 11 883 4000'}</p>
+                      </div>
+                    </div>
+                    <a
+                      href={`tel:${selectedBusinessProfile.contact || selectedBusinessProfile.phone || '+27118834000'}`}
+                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] flex items-center gap-1 shadow-sm transition-all"
+                    >
+                      <Phone className="w-3 h-3" />
+                      <span>Call</span>
+                    </a>
+                  </div>
+
+                  {/* Email */}
+                  <div className="py-2.5 flex items-center justify-between gap-2.5">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-xl bg-white shadow-sm border border-slate-200 flex items-center justify-center shrink-0 text-slate-600">
+                        <Mail className="w-4 h-4 text-amber-500" />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase block">Email Address</span>
+                        <p className="text-xs font-bold text-slate-800 truncate">{selectedBusinessProfile.email || `${selectedBusinessProfile.name.toLowerCase().replace(/[^a-z0-9]/g, '')}@business.co.za`}</p>
+                      </div>
+                    </div>
+                    <a
+                      href={`mailto:${selectedBusinessProfile.email || 'info@business.co.za'}`}
+                      className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-[11px] flex items-center gap-1 shadow-sm transition-all"
+                    >
+                      <Mail className="w-3 h-3" />
+                      <span>Email</span>
+                    </a>
+                  </div>
+
+                  {/* Registration / CIPC */}
+                  <div className="pt-2.5 flex items-start gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-white shadow-sm border border-slate-200 flex items-center justify-center shrink-0 text-slate-600">
+                      <FileText className="w-4 h-4 text-purple-600" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase block">CIPC & Tax Registration</span>
+                      <p className="text-xs font-bold text-slate-800">{selectedBusinessProfile.regNumber || '2024/782910/07 (SARS & CIPC Compliant)'}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Primary Action Buttons */}
+                <div className="flex gap-2.5 pt-1">
+                  <button
+                    onClick={() => {
+                      directToBusiness(selectedBusinessProfile);
+                    }}
+                    className="flex-1 py-3 bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-black rounded-2xl text-xs shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 active:scale-95 transition-all"
+                  >
+                    <Navigation className="w-4 h-4" />
+                    <span>Navigate to Location</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShareBusinessModal(selectedBusinessProfile);
+                    }}
+                    className="px-4 py-3 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-extrabold rounded-2xl text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all"
+                    title="Share Business Location"
+                  >
+                    <Share2 className="w-4 h-4 text-amber-600" />
+                    <span>Share</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedBusinessProfile(null)}
+                    className="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-xs active:scale-95 transition-all"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Social Media Share Modal - Directs user to external social media apps with exact link */}
+      {shareBusinessModal && (
+        <div className="fixed inset-0 z-[2500] bg-slate-950/75 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-200 border border-slate-100 flex flex-col relative text-slate-800">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 border border-amber-200/60 flex items-center justify-center shadow-sm">
+                  <Share2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-black text-slate-900 text-base">Share Business Location</h3>
+                  <p className="text-xs text-slate-500">Direct to apps with exact pin & coordinates</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShareBusinessModal(null)}
+                className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 hover:bg-slate-200 flex items-center justify-center transition-all"
+                title="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Target Business Summary Card */}
+            <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-200/80 my-4">
+              <img
+                src={shareBusinessModal.avatar || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=150&auto=format&fit=crop&q=80'}
+                alt={shareBusinessModal.name}
+                className="w-12 h-12 rounded-xl object-cover border border-white shadow-sm shrink-0"
+              />
+              <div className="min-w-0 flex-1">
+                <h4 className="text-xs font-black text-slate-900 truncate">{shareBusinessModal.name}</h4>
+                <p className="text-[11px] text-slate-500 font-medium truncate mt-0.5">{shareBusinessModal.address || 'Sandton, Johannesburg'}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-[10px] font-mono text-slate-600 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                    GPS: {shareBusinessModal.lat.toFixed(4)}, {shareBusinessModal.lng.toFixed(4)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Social Media App Grid */}
+            <div className="space-y-2">
+              <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 block mb-2">Select App to Direct:</span>
+              <div className="grid grid-cols-4 gap-2.5">
+                {/* WhatsApp */}
+                <button
+                  onClick={() => shareToPlatform('whatsapp', shareBusinessModal)}
+                  className="flex flex-col items-center gap-1.5 p-2.5 rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/60 transition-all hover:scale-105 active:scale-95 group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-[#25D366] text-white flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">WhatsApp</span>
+                </button>
+
+                {/* X (Twitter) */}
+                <button
+                  onClick={() => shareToPlatform('x', shareBusinessModal)}
+                  className="flex flex-col items-center gap-1.5 p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200 transition-all hover:scale-105 active:scale-95 group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">X (Twitter)</span>
+                </button>
+
+                {/* Facebook */}
+                <button
+                  onClick={() => shareToPlatform('facebook', shareBusinessModal)}
+                  className="flex flex-col items-center gap-1.5 p-2.5 rounded-2xl bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200/60 transition-all hover:scale-105 active:scale-95 group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-[#1877F2] text-white flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">Facebook</span>
+                </button>
+
+                {/* Telegram */}
+                <button
+                  onClick={() => shareToPlatform('telegram', shareBusinessModal)}
+                  className="flex flex-col items-center gap-1.5 p-2.5 rounded-2xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200/60 transition-all hover:scale-105 active:scale-95 group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-[#229ED9] text-white flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.871 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.458c.538-.196 1.006.128.832.94z"/>
+                    </svg>
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">Telegram</span>
+                </button>
+
+                {/* LinkedIn */}
+                <button
+                  onClick={() => shareToPlatform('linkedin', shareBusinessModal)}
+                  className="flex flex-col items-center gap-1.5 p-2.5 rounded-2xl bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200/60 transition-all hover:scale-105 active:scale-95 group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-[#0A66C2] text-white flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">LinkedIn</span>
+                </button>
+
+                {/* Google Maps Pin */}
+                <button
+                  onClick={() => shareToPlatform('googlemaps', shareBusinessModal)}
+                  className="flex flex-col items-center gap-1.5 p-2.5 rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200/60 transition-all hover:scale-105 active:scale-95 group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">Google Maps</span>
+                </button>
+
+                {/* SMS Message */}
+                <button
+                  onClick={() => shareToPlatform('sms', shareBusinessModal)}
+                  className="flex flex-col items-center gap-1.5 p-2.5 rounded-2xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200/60 transition-all hover:scale-105 active:scale-95 group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">SMS</span>
+                </button>
+
+                {/* Email */}
+                <button
+                  onClick={() => shareToPlatform('email', shareBusinessModal)}
+                  className="flex flex-col items-center gap-1.5 p-2.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200/60 transition-all hover:scale-105 active:scale-95 group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-800">Email</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Direct Exact Link & Copy Box */}
+            <div className="mt-4 pt-3 border-t border-slate-100">
+              <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 block mb-1.5">Exact Location Link:</span>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={getBusinessShareDetails(shareBusinessModal).exactLink}
+                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-600 focus:outline-none select-all"
+                />
+                <button
+                  onClick={() => {
+                    const link = getBusinessShareDetails(shareBusinessModal).exactLink;
+                    navigator.clipboard?.writeText(link);
+                    setCopiedShareLink(true);
+                    setTimeout(() => setCopiedShareLink(false), 2500);
+                  }}
+                  className={`px-3 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 shadow-sm active:scale-95 shrink-0 ${
+                    copiedShareLink
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-slate-900 hover:bg-slate-800 text-white'
+                  }`}
+                >
+                  {copiedShareLink ? (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>Copy Link</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Native Device Share Sheet option if supported */}
+            {typeof navigator !== 'undefined' && 'share' in navigator && (
+              <button
+                onClick={() => shareToPlatform('native', shareBusinessModal)}
+                className="w-full mt-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95"
+              >
+                <Share2 className="w-4 h-4 text-amber-600" />
+                <span>More Device Share Options</span>
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Create Business Account & Upload Documents Modal */}
+      {showCreateBusinessModal && (
+        <div className="fixed inset-0 z-[2000] bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-2xl bg-stone-100 text-stone-800 flex items-center justify-center shadow-sm">
+                  <Building2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-black text-slate-900 text-base">Register Business Account</h3>
+                  <p className="text-xs text-slate-500">Fill in company details & upload supporting docs</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setShowCreateBusinessModal(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!newBizName || !newBizOwnerName) {
+                  alert("Please enter business name and owner name.");
+                  return;
+                }
+                const newSub = {
+                  id: 'biz-' + Date.now(),
+                  name: newBizName,
+                  category: newBizCategory,
+                  service: newBizService,
+                  ownerName: newBizOwnerName,
+                  contact: newBizContact || '+27 82 000 0000',
+                  email: newBizEmail || 'business@gmail.com',
+                  address: newBizAddress || 'Sandton, Johannesburg',
+                  regNumber: newBizRegNumber || '2026/000000/07',
+                  hours: newBizHours || 'Mon - Fri: 09:00 AM - 05:00 PM',
+                  documents: [...newBizDocs],
+                  status: 'pending',
+                  submittedAt: new Date().toISOString()
+                };
+                setBusinessSubmissions(prev => [newSub, ...prev]);
+                alert("Business registered and submitted to Tenant successfully! Pending review.");
+                setShowCreateBusinessModal(false);
+                setNewBizName('');
+                setNewBizOwnerName('');
+                setNewBizContact('');
+                setNewBizEmail('');
+                setNewBizAddress('');
+                setNewBizRegNumber('');
+                setNewBizHours('Mon - Fri: 08:00 AM - 05:00 PM');
+                setNewBizDocs([]);
+              }}
+              className="space-y-3.5 text-left text-xs"
+            >
+              <div>
+                <label className="font-bold text-slate-700 block mb-1">Business Name</label>
+                <input 
+                  type="text" 
+                  required
+                  placeholder="e.g. Metro Builders & Contractors"
+                  value={newBizName}
+                  onChange={(e) => setNewBizName(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Industry</label>
+                  <select
+                    value={newBizCategory}
+                    onChange={(e) => setNewBizCategory(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-medium focus:outline-none"
+                  >
+                    <option value="Retail">Retail</option>
+                    <option value="Services">Services</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Hospitality">Hospitality</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Service Type</label>
+                  <input 
+                    type="text"
+                    placeholder="e.g. Plumbing, Clothing"
+                    value={newBizService}
+                    onChange={(e) => setNewBizService(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-medium focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Owner Full Name</label>
+                  <input 
+                    type="text" 
+                    required
+                    placeholder="John Smith"
+                    value={newBizOwnerName}
+                    onChange={(e) => setNewBizOwnerName(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-medium focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Registration No.</label>
+                  <input 
+                    type="text"
+                    placeholder="2026/123456/07"
+                    value={newBizRegNumber}
+                    onChange={(e) => setNewBizRegNumber(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-medium focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="font-bold text-slate-700 block mb-1">Operating Hours</label>
+                <input 
+                  type="text"
+                  placeholder="e.g. Mon - Sat: 08:00 AM - 06:00 PM"
+                  value={newBizHours}
+                  onChange={(e) => setNewBizHours(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Contact Number</label>
+                  <input 
+                    type="text"
+                    placeholder="+27 82 123 4567"
+                    value={newBizContact}
+                    onChange={(e) => setNewBizContact(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-medium focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Email Address</label>
+                  <input 
+                    type="email"
+                    placeholder="biz@company.co.za"
+                    value={newBizEmail}
+                    onChange={(e) => setNewBizEmail(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-medium focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="font-bold text-slate-700 block mb-1">Physical Business Address</label>
+                <input 
+                  type="text"
+                  placeholder="Street, City, Province"
+                  value={newBizAddress}
+                  onChange={(e) => setNewBizAddress(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-medium focus:outline-none"
+                />
+              </div>
+
+              <div className="p-4 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-bold text-slate-800 text-xs">Supporting Documents (CIPC / Tax / ID)</span>
+                  <label className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition-all active:scale-95 shadow-sm">
+                    Select Files
+                    <input 
+                      type="file" 
+                      multiple 
+                      className="hidden" 
+                      onChange={handleDocumentFilesSelect}
+                      accept=".pdf,.jpg,.jpeg,.png"
+                    />
+                  </label>
+                </div>
+                
+                {newBizDocs.length > 0 ? (
+                  <div className="space-y-1.5 max-h-32 overflow-y-auto pr-1 custom-scrollbar">
+                    {newBizDocs.map((doc) => (
+                      <div key={doc.id} className="flex items-center justify-between text-[10px] text-slate-600 bg-white p-2 rounded-xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-left-2">
+                        <div className="flex items-center gap-2 overflow-hidden">
+                          <FileText className="w-3 h-3 text-blue-500 shrink-0" />
+                          <div className="truncate">
+                            <p className="font-bold text-slate-800 truncate leading-tight">{doc.name}</p>
+                            <p className="text-[9px] text-slate-400">{doc.category} • {doc.size}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-emerald-600 font-bold">✓</span>
+                          <button
+                            type="button"
+                            onClick={() => setNewBizDocs(prev => prev.filter(d => d.id !== doc.id))}
+                            className="text-slate-400 hover:text-red-500 p-0.5"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-4 text-slate-400">
+                    <Upload className="w-6 h-6 mx-auto mb-1 opacity-20" />
+                    <p className="text-[10px]">No documents selected</p>
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="w-full mt-2 bg-slate-900 hover:bg-slate-800 text-white font-black py-3 rounded-2xl text-xs transition-all shadow-lg active:scale-95"
+              >
+                Submit Business for Tenant Approval
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Tenant Business Submissions Inspection Modal */}
+      {showBusinessSubmissionsModal && (
+        <div className="fixed inset-0 z-[2000] bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shadow-sm">
+                  <Building2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-black text-slate-900 text-base">Business Applications</h3>
+                  <p className="text-xs text-slate-500">Review, inspect documents full-screen & approve/reject</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setShowBusinessSubmissionsModal(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {businessSubmissions.length === 0 ? (
+                <p className="text-center text-slate-400 py-8 text-xs font-semibold">No business applications submitted yet.</p>
+              ) : (
+                businessSubmissions.map(biz => (
+                  <div key={biz.id} className="p-4 rounded-2xl border border-slate-200/90 bg-slate-50 flex flex-col gap-2.5 text-xs text-slate-800">
+                    <div className="flex items-center justify-between">
+                      <span className="font-black text-sm text-slate-900">{biz.name}</span>
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
+                        biz.status === 'approved' ? 'bg-emerald-100 text-emerald-700' :
+                        biz.status === 'rejected' ? 'bg-rose-100 text-rose-700' :
+                        'bg-amber-100 text-amber-700 animate-pulse'
+                      }`}>
+                        {biz.status}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600">
+                      <div><strong className="text-slate-800">Owner:</strong> {biz.ownerName}</div>
+                      <div><strong className="text-slate-800">Category:</strong> {biz.category} ({biz.service})</div>
+                      <div><strong className="text-slate-800">Contact:</strong> {biz.contact}</div>
+                      <div><strong className="text-slate-800">Reg No:</strong> {biz.regNumber}</div>
+                      <div><strong className="text-slate-800">Hours:</strong> {biz.hours}</div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+                      <button
+                        onClick={() => {
+                          setInspectingBusinessDoc(biz);
+                          setActiveInspectedDocIdx(0);
+                        }}
+                        className="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5"
+                      >
+                        <FileText className="w-3.5 h-3.5" />
+                        <span>View {biz.documents?.length || 0} Documents</span>
+                      </button>
+
+                      {biz.status === 'pending' && (
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => {
+                              setBusinessSubmissions(prev => prev.map(b => b.id === biz.id ? { ...b, status: 'approved' } : b));
+                              setBusinessesListings(prev => {
+                                if (prev.some(x => x.id === biz.id)) return prev;
+                                return [
+                                  ...prev,
+                                  {
+                                    id: biz.id,
+                                    name: biz.name,
+                                    category: biz.category || 'Services',
+                                    service: biz.service || 'Business',
+                                    rating: '5.0',
+                                    reviews: 1,
+                                    lat: userPos ? userPos[0] + (Math.random() - 0.5) * 0.02 : 20.005,
+                                    lng: userPos ? userPos[1] + (Math.random() - 0.5) * 0.02 : 0.015,
+                                    avatar: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=150&auto=format&fit=crop&q=80',
+                                    phone: biz.contact || '+27 82 123 4567',
+                                    email: biz.email || 'info@company.co.za',
+                                    address: biz.address || 'Sandton Central, Johannesburg',
+                                    regNumber: biz.regNumber || '2026/000000/07',
+                                    hours: biz.hours || 'Mon - Sat: 08:00 AM - 06:00 PM',
+                                    description: `${biz.name} is a certified commercial enterprise registered by ${biz.ownerName || 'owner'}.`
+                                  }
+                                ];
+                              });
+                              alert(`Approved ${biz.name}! Added to live map with dedicated trade symbol.`);
+                            }}
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-xl shadow-sm transition-all"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onClick={() => {
+                              setBusinessSubmissions(prev => prev.map(b => b.id === biz.id ? { ...b, status: 'rejected' } : b));
+                              alert(`Rejected ${biz.name}.`);
+                            }}
+                            className="bg-rose-600 hover:bg-rose-700 text-white font-bold px-3 py-1.5 rounded-xl shadow-sm transition-all"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Full-Screen Document Inspection Modal */}
+      {inspectingBusinessDoc && (
+        <div className="fixed inset-0 z-[2500] bg-slate-950/90 backdrop-blur-md flex flex-col p-4 animate-in fade-in duration-200">
+          <div className="flex items-center justify-between text-white pb-3 border-b border-slate-800">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-black text-base">{inspectingBusinessDoc.name} - Supporting Documents</h3>
+                <p className="text-xs text-slate-400">Owner: {inspectingBusinessDoc.ownerName} • Reg: {inspectingBusinessDoc.regNumber}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setInspectingBusinessDoc(null)}
+              className="w-9 h-9 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center justify-center transition-all shadow-lg"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="flex-1 flex flex-col md:flex-row gap-4 p-2 overflow-hidden mt-4">
+            {/* Sidebar: Document List */}
+            <div className="w-full md:w-64 bg-white/5 backdrop-blur-sm rounded-2xl p-4 overflow-y-auto border border-white/10 shrink-0">
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Attached Files ({inspectingBusinessDoc.documents?.length || 0})</h4>
+              <div className="flex flex-col gap-2">
+                {inspectingBusinessDoc.documents?.map((doc: any, idx: number) => (
+                  <button
+                    key={doc.id}
+                    onClick={() => setActiveInspectedDocIdx(idx)}
+                    className={`text-left p-3 rounded-xl transition-all border flex items-start gap-2.5 ${
+                      activeInspectedDocIdx === idx
+                        ? 'bg-blue-600 border-blue-500 text-white shadow-lg'
+                        : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
+                    }`}
+                  >
+                    <FileText className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${activeInspectedDocIdx === idx ? 'text-blue-100' : 'text-slate-500'}`} />
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-black truncate leading-tight">{doc.name}</p>
+                      <p className={`text-[9px] ${activeInspectedDocIdx === idx ? 'text-blue-200' : 'text-slate-500'}`}>{doc.category}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Main Area: Full Screen Preview */}
+            <div className="flex-1 flex flex-col bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-800">
+              {inspectingBusinessDoc.documents && inspectingBusinessDoc.documents[activeInspectedDocIdx] ? (
+                <>
+                  <div className="p-3 bg-slate-100 border-b border-slate-200 flex items-center justify-between text-xs text-slate-700 font-bold">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0">
+                        <span className="text-[10px]">{activeInspectedDocIdx + 1}</span>
+                      </div>
+                      <span className="truncate max-w-[200px] sm:max-w-md">📄 {inspectingBusinessDoc.documents[activeInspectedDocIdx].name}</span>
+                    </div>
+                    <span className="text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full text-[10px] font-black">Verified {inspectingBusinessDoc.documents[activeInspectedDocIdx].category}</span>
+                  </div>
+                  <div className="flex-1 flex items-center justify-center bg-slate-900 overflow-auto p-4 custom-scrollbar">
+                    <img 
+                      src={inspectingBusinessDoc.documents[activeInspectedDocIdx].dataUrl} 
+                      alt="Business Document Preview" 
+                      className="max-h-full max-w-full object-contain rounded-xl shadow-2xl ring-1 ring-white/10 transition-transform duration-300 hover:scale-[1.02]"
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center text-slate-400 gap-3">
+                  <FileText className="w-12 h-12 opacity-10" />
+                  <p className="font-bold">No document selected for inspection</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
